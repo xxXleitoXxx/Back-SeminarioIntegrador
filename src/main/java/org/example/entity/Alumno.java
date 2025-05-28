@@ -28,7 +28,6 @@ public class Alumno extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "localidad_id", nullable = false)
     private Localidad localidad;
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "alumno_id", nullable = false)
     private List<ContactoEmergencia> contactosEmergencia = new ArrayList<>();

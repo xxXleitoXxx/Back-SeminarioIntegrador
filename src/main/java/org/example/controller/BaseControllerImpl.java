@@ -53,7 +53,7 @@ public abstract class BaseControllerImpl<E extends BaseEntity, S extends BaseSer
         try {
             return ResponseEntity.status(HttpStatus.OK).body(servicio.saveAll(entity));
         } catch (Exception e) {
-            throw new Exception("Error al guardar los datos: " + e.getMessage());
+            throw new Exception("Error al   guardar los datos: " + e.getMessage());
 
         }
     }
