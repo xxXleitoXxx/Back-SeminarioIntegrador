@@ -15,8 +15,10 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Localidad extends BaseEntity {
-
+public class Localidad {
+        @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String nombreLocalidad;
     private Date fechaBajaLocalidad;
 

@@ -17,9 +17,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 
-
-public class Alumno extends BaseEntity{
-
+public class Alumno {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private int dniAlumno;
     private String domicilioAlumno;
     private Date fechaNacAlumno;

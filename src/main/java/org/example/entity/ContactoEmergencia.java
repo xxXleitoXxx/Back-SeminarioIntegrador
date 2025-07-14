@@ -1,8 +1,7 @@
 package org.example.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -13,7 +12,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ContactoEmergencia extends BaseEntity{
+public class ContactoEmergencia {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String direccionContacto;
     private String nombreContacto;
     private long telefonoContacto;

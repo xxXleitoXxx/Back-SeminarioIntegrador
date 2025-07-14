@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "api/v1/localidades")
 @CrossOrigin(origins = "*")
-public class LocalidadController extends BaseControllerImpl<Localidad, LocalidadServiceImpl> {
+public class LocalidadController {
 }
