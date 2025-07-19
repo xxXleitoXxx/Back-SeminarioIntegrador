@@ -25,7 +25,11 @@ public class Alumno {
     private String domicilioAlumno;
     private Date fechaNacAlumno;
     private String nombreAlumno;
-    private long telefono;
+    private String apellidoAlumno;
+    private long telefonoAlumno;
+    private Date fechaBajaAlumno;
+    private String mailAlumno;
+
     @ManyToOne
     @JoinColumn(name = "localidad_id", nullable = false)
     private Localidad localidad;

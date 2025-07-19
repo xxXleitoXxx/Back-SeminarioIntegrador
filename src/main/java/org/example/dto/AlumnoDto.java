@@ -1,14 +1,15 @@
 package org.example.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
+@Builder
 @Getter
 @Setter
 public class AlumnoDto {
@@ -17,6 +18,10 @@ public class AlumnoDto {
     private String domicilioAlumno;
     private Date fechaNacAlumno;
     private String nombreAlumno;
-    private int telefono;
-    private int codLocalidad;
+    private String apellidoAlumno;
+    private int telefonoAlumno;
+    private String MailAlumno;
+    private LocalidadDto localidadAlumno;
+    private List<ContactoEmergenciaDTO> contactoEmergenciaDTO;
+    private FichaMedicaDTO fichaMedicaDTO;
 }
