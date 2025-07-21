@@ -29,7 +29,10 @@ public class Alumno {
     private long telefonoAlumno;
     private Date fechaBajaAlumno;
     private String mailAlumno;
-
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "alumno_id") // Esto crea una columna en FichaMedica
+    private List<FichaMedica> fichasMedicas = new ArrayList<>();
+//tengo que poner una ficha medica por pdf, lo cargo a la base de datos como un blob?
     @ManyToOne
     @JoinColumn(name = "localidad_id", nullable = false)
     private Localidad localidad;
