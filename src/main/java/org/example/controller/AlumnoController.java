@@ -34,8 +34,12 @@ public class AlumnoController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el alumno: " + e.getMessage());
         }
+           }
 
-    }
+
+
+
+
     //Añadir otro contacto de Emergencia a un Alumno
     @PostMapping("/{alumnoId}/contactos")
     public ResponseEntity<ContactoEmergencia> agregarContacto(@PathVariable("alumnoId") Long alumnoId,
