@@ -6,6 +6,8 @@ import org.example.repository.ProfesorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProfesorService {
     @Autowired
@@ -17,7 +19,7 @@ public class ProfesorService {
         existeProfesorPorDni(nuevoprofe.getDniProfesor());
 
         Profesor profesor= new Profesor();
-        profesor.setCodProfesor(nuevoprofe.getCodProfesor());
+        profesor.setNroProfesor(nuevoprofe.getNroProfesor());
         profesor.setDniProfesor(nuevoprofe.getDniProfesor());
         profesor.setNombreProfesor(nuevoprofe.getNombreProfesor());
         profesor.setTelefonoProfesor(nuevoprofe.getTelefonoProfesor());
@@ -28,7 +30,7 @@ public class ProfesorService {
 
     //Metodo para validar si un profesor existe por su DNI
     public void existeProfesorPorDni(int dniProfesor) {
-        if(profesorRepository.findByDniProfesor(dniProfesor).isPresent()) {;
+        if(profesorRepository.findByDniProfesor(dniProfesor).isPresent()) {
             throw new IllegalArgumentException("Ya existe un profesor con el DNI proporcionado");
         }
     }
@@ -48,5 +50,12 @@ public class ProfesorService {
         return profesorRepository.save(profesorexistente);
 
     }
+    public List<Profesor> getProfesores() {
 
+        List<Profesor> profesores = profesorRepository.findAll();
+        if (profesores.isEmpty()) {
+            throw new IllegalArgumentException("No existen profesores registrados");
+        }
+        return profesores;
+    }
 }

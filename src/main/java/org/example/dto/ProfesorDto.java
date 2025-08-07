@@ -9,7 +9,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class ProfesorDto {
-    private Long codProfesor;
+    private Long nroProfesor;
     private int dniProfesor;
     private String nombreProfesor;
     private int telefonoProfesor;

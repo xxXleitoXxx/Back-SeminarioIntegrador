@@ -8,17 +8,32 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "api/v1/profesores")
 @CrossOrigin(origins = "*")
 public class ProfesorController {
     @Autowired
     private ProfesorService profesorService;
+@GetMapping
+public ResponseEntity<?> getProfesores(){
+    try{
+        //Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
+        List<Profesor> profesorcreado = profesorService.getProfesores();
+        return ResponseEntity.status(HttpStatus.CREATED).body(profesorcreado);
+
+    }catch (Exception e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el profesor: " + e.getMessage());
+    }
+}
+
 
     // POST: Crear nuevo profesor
     @PostMapping
     public ResponseEntity<?> crearProfesor(@RequestBody ProfesorDto profesorDto){
         try{
+            //Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
             Profesor profesorcreado = profesorService.crearProfesor(profesorDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(profesorcreado);
 
@@ -39,4 +54,5 @@ public class ProfesorController {
                     .body("Error al modificar el profesor: " + e.getMessage());
         }
     }
+
 }

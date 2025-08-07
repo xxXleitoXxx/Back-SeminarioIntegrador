@@ -18,7 +18,7 @@ import java.util.Date;
 public class Profesor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long codProfesor;
+    private Long nroProfesor;
     private int dniProfesor;
     private String nombreProfesor;
     private int telefonoProfesor;

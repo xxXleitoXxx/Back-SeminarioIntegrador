@@ -20,7 +20,7 @@ import java.util.List;
 public class Alumno {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long nroAlumno;
     private int dniAlumno;
     private String domicilioAlumno;
     private Date fechaNacAlumno;

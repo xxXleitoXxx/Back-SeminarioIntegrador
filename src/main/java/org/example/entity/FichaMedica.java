@@ -10,10 +10,11 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class FichaMedica {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long NroFichaMedica;
     private String rutaPdf;
     private Date fechaHoraBaja;
 

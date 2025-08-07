@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 public class AlumnoDto {
-    private Long id;
+    private Long nroAlumno;
     private int dniAlumno;
     private String domicilioAlumno;
     private Date fechaNacAlumno;

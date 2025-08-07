@@ -29,7 +29,7 @@ public class AlumnoController {
         // Guardar el alumno en la base de datos
         try {
             Alumno alumnocreado= AlumnoService.crearAlumno(alumnoDto);
-            fichaMedicaServices.agregarFichaMedica(alumnocreado.getId(),nuevaFichaMedica);
+            fichaMedicaServices.agregarFichaMedica(alumnocreado.getNroAlumno(),nuevaFichaMedica);
             return ResponseEntity.status(HttpStatus.CREATED).body(alumnocreado);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el alumno: " + e.getMessage());
