@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -16,17 +17,17 @@ import java.util.List;
 public class ProfesorController {
     @Autowired
     private ProfesorService profesorService;
-@GetMapping
-public ResponseEntity<?> getProfesores(){
-    try{
-        //Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
-        List<Profesor> profesorcreado = profesorService.getProfesores();
-        return ResponseEntity.status(HttpStatus.CREATED).body(profesorcreado);
+    @GetMapping
+    public ResponseEntity<?> getProfesores(){
+        try{
+            //Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
+            List<Profesor> profesorcreado = profesorService.getProfesores();
+            return ResponseEntity.status(HttpStatus.CREATED).body(profesorcreado);
 
-    }catch (Exception e){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el profesor: " + e.getMessage());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el profesor: " + e.getMessage());
+        }
     }
-}
 
 
     // POST: Crear nuevo profesor
@@ -54,5 +55,18 @@ public ResponseEntity<?> getProfesores(){
                     .body("Error al modificar el profesor: " + e.getMessage());
         }
     }
+
+    // PUT: Dar de baja profesor por DNI
+    @PutMapping("/{dni}/baja")
+    public ResponseEntity<?> darDeBajaProfesor(@PathVariable("dni") int dniProfesor) {
+        try {
+            Profesor profesorBaja = profesorService.bajaProfesor(dniProfesor, new Date());
+            return ResponseEntity.ok(profesorBaja);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error al dar de baja el profesor: " + e.getMessage());
+        }
+    }
+
 
 }
