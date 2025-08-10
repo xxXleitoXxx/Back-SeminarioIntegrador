@@ -1,0 +1,83 @@
+package org.example.services;
+
+
+import org.example.dto.TipoClaseDTO;
+import org.example.entity.Profesor;
+import org.example.entity.TipoClase;
+import org.example.repository.TipoClaseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+
+@Service
+public class TipoClaseService {
+    @Autowired
+    TipoClaseRepository tipoClaseRepository;
+
+    //metodo crear tipo clase
+    public TipoClase crearTipoClase(TipoClaseDTO nuevoTipoClase){
+        //metodo que verifica si ya existe el tipoclase
+        validarTipoClaseNoExistente(nuevoTipoClase.getCodTipoClase());
+
+        TipoClase tipoClase = new TipoClase();
+        tipoClase.setFechaBajaTipoClase(nuevoTipoClase.getFechaBajaTipoClase());
+        tipoClase.setCupoMaxTipoClase(nuevoTipoClase.getCupoMaxTipoClase());
+        tipoClase.setNombreTipoClase(nuevoTipoClase.getNombreTipoClase());
+        tipoClase.setRangoEtario(nuevoTipoClase.getRangoEtario());
+        return tipoClaseRepository.save(tipoClase);
+    }
+    public void validarTipoClaseNoExistente(Long codTipoClase) {
+        tipoClaseRepository.findBycodTipoClase(codTipoClase)
+                .ifPresent(tc -> {
+                    if (tc.getFechaBajaTipoClase() != null){
+                        throw new IllegalArgumentException("Ya existe un TipoClase con ese código y no está dado de baja.");
+                    }
+                });
+    }
+
+    //metodo modificar tipoclase
+    public TipoClase modificarTipoClase(Long codTipoClase,TipoClaseDTO tipoClaseDTO){
+        TipoClase tipoClase = tipoClaseRepository.findBycodTipoClase(codTipoClase).orElseThrow(() -> new IllegalArgumentException("No existe un tipoclase  con el codigo " + codTipoClase));
+
+        //validar que no este dado de baja
+        if (tipoClase.getFechaBajaTipoClase() != null){
+            throw new IllegalArgumentException("El tipoclase está dado de baja.");
+        }
+
+        tipoClase.setRangoEtario(tipoClaseDTO.getRangoEtario());
+        tipoClase.setCupoMaxTipoClase(tipoClaseDTO.getCupoMaxTipoClase());
+        tipoClase.setNombreTipoClase(tipoClaseDTO.getNombreTipoClase());
+        return tipoClaseRepository.save(tipoClase);
+
+    }
+
+    //metodo dar de baja tipo clase
+    public TipoClase bajaTipoClase(Long codTipoClase, Date fechaBaja){
+        TipoClase tipoClase = tipoClaseRepository.findBycodTipoClase(codTipoClase).orElseThrow(() -> new IllegalArgumentException("No existe un tipoclase  con el codigo " + codTipoClase));
+
+        //validar que no este dado de baja
+        if (tipoClase.getFechaBajaTipoClase() != null){
+            throw new IllegalArgumentException("El tipoclase ya está dado de baja.");
+        }
+
+        tipoClase.setFechaBajaTipoClase(fechaBaja);
+        return tipoClaseRepository.save(tipoClase);
+
+    }
+
+    //traer todos los tipoclase
+    public List<TipoClase> getTipoClases() {
+
+        List<TipoClase> tipoClases = tipoClaseRepository.findAll();
+        if (tipoClases.isEmpty()) {
+            throw new IllegalArgumentException("No existen tipo clases registrados");
+        }
+        return tipoClases;
+    }
+
+
+
+
+}
