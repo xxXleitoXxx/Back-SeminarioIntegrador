@@ -23,24 +23,28 @@ public class AlumnoController {
     @Autowired
     private FichaMedicaServices fichaMedicaServices;
 
-    @PostMapping("/alumnos")
-    public ResponseEntity<?> crearAlumno(@RequestBody AlumnoDto alumnoDto, @RequestBody FichaMedicaDTO nuevaFichaMedica) {
+    @GetMapping
+    public ResponseEntity<?>obtenerAlumnos(){
+        try {
+            // Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
+            return ResponseEntity.status(HttpStatus.CREATED).body(AlumnoService.getAlumnos());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al obtener los alumnos: " + e.getMessage());
+        }
+
+    }
+    @PostMapping
+    public ResponseEntity<?> crearAlumno(@RequestBody AlumnoDto alumnoDto) {
         // Aquí puedes mapear AlumnoDto a la entidad Alumno y sus relaciones
         // Guardar el alumno en la base de datos
         try {
             Alumno alumnocreado= AlumnoService.crearAlumno(alumnoDto);
-            fichaMedicaServices.agregarFichaMedica(alumnocreado.getNroAlumno(),nuevaFichaMedica);
+            fichaMedicaServices.agregarFichaMedica(alumnocreado.getNroAlumno(),alumnoDto.getFichaMedicaDTO());
             return ResponseEntity.status(HttpStatus.CREATED).body(alumnocreado);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el alumno: " + e.getMessage());
         }
            }
-
-
-
-
-
-    //Añadir otro contacto de Emergencia a un Alumno
     @PostMapping("/{alumnoId}/contactos")
     public ResponseEntity<ContactoEmergencia> agregarContacto(@PathVariable("alumnoId") Long alumnoId,
                                                               @RequestBody ContactoEmergencia nuevoContacto) {

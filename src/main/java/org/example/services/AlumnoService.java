@@ -31,7 +31,7 @@ public class AlumnoService {
     public Alumno crearAlumno(AlumnoDto nuevoAlumno) {
         //validamos que el alumno no exista en la base de datos
 
-      existeAlumnoPorDni(nuevoAlumno.getDniAlumno());
+        existeAlumnoPorDni(nuevoAlumno.getDniAlumno());
 
         Alumno alumno = new Alumno();
         alumno.setNombreAlumno(nuevoAlumno.getNombreAlumno());
@@ -66,8 +66,8 @@ public class AlumnoService {
         }
 
         // Aquí asumimos que ContactoEmergenciaDTO tiene los campos necesarios para crear ContactoEmergencia
-        List<ContactoEmergencia> contactoEmergencia= new ArrayList<>();
-        List<ContactoEmergenciaDTO>nuevoContactoEmergencia = nuevoAlumno.getContactoEmergenciaDTO();
+        List<ContactoEmergencia> contactoEmergencia = new ArrayList<>();
+        List<ContactoEmergenciaDTO> nuevoContactoEmergencia = nuevoAlumno.getContactoEmergenciaDTO();
         for (ContactoEmergenciaDTO contactoDTO : nuevoContactoEmergencia) {
             ContactoEmergencia contacto = getContactoEmergencia(contactoDTO);
             // Setea aquí los demás campos necesarios
@@ -88,16 +88,18 @@ public class AlumnoService {
             throw new IllegalArgumentException("El nombre del contacto no puede ser nulo");
         }
         //comprobamos que el telefono del contacto no sea nulo
-        if (contactoDTO.getTelefonoContacto()== null) {
+        if (contactoDTO.getTelefonoContacto() == null) {
             throw new IllegalArgumentException("El telefono del contacto no puede ser nulo");
         }
         contacto.setNombreContacto(contactoDTO.getNombreContacto());
         contacto.setTelefonoContacto(contactoDTO.getTelefonoContacto());
         return contacto;
     }
-//Metodo para validar si un alumno existe por su DNI
+
+    //Metodo para validar si un alumno existe por su DNI
     public void existeAlumnoPorDni(int dniAlumno) {
-        if(alumnoRepository.findByDniAlumno(dniAlumno).isPresent()) {;
+        if (alumnoRepository.findByDniAlumno(dniAlumno).isPresent()) {
+            ;
             throw new IllegalArgumentException("Ya existe un alumno con el DNI proporcionado");
         }
     }
@@ -112,4 +114,12 @@ public class AlumnoService {
         return nuevoContacto;
     }
 
+    public List<Alumno> getAlumnos() {
+        List<Alumno> alumnos = alumnoRepository.findAll();
+        return alumnos;
+    }
+
+    public Alumno getAlumnoByNroAlumno(Long nroAlumno) {
+        return alumnoRepository.findById(nroAlumno).orElseThrow(() -> new NoSuchElementException("Alumno no encontrado con nroAlumno: " + nroAlumno));
+    }
 }

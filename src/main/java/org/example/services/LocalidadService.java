@@ -57,9 +57,7 @@ public class LocalidadService {
     //traer todas las localidades
     public List<Localidad> getLocalidades() {
         List<Localidad> localidades = localidadRepository.findAll();
-        if (localidades.isEmpty()) {
-            throw new NoSuchElementException("No existen localidades registradas");
-        }
+
         return localidades;
 
     }

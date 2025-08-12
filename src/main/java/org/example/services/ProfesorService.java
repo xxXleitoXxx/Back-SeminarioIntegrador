@@ -61,9 +61,7 @@ public class ProfesorService {
     public List<Profesor> getProfesores() {
 
         List<Profesor> profesores = profesorRepository.findAll();
-        if (profesores.isEmpty()) {
-            throw new IllegalArgumentException("No existen profesores registrados");
-        }
+    
         return profesores;
     }
     //Metodo para dar de baja profesor

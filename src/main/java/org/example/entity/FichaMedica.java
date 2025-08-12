@@ -15,8 +15,10 @@ public class FichaMedica {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long NroFichaMedica;
-    private String rutaPdf;
     private Date fechaHoraBaja;
 
+    @Column(columnDefinition = "LONGBLOB")
+    @Lob
+    private byte[] archivo;
     // getters y setters
 }
