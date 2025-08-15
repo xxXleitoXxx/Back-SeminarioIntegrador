@@ -44,7 +44,7 @@ public class AlumnoService {
 
         //comprobamos que la localidad no sea nula
         Localidad localidad = localidadService.buscarLocalidadPorCodigoYFechaBaja(nuevoAlumno.getLocalidadAlumno().getCodLocalidad());
-        alumno.setLocalidad(localidad); // Asignamos la localidad al Alumno
+        alumno.setLocalidadAlumno(localidad); // Asignamos la localidad al Alumno
 
         //comprobamos que la ficha medica no sea nula
         if (nuevoAlumno.getFichaMedicaDTO() == null) {
@@ -61,13 +61,13 @@ public class AlumnoService {
          */
         // Asignamos los contactos de emergencia del DTO al Alumno
         //comprobamos que el contacto de emergencia no sea nulo
-        if (nuevoAlumno.getContactoEmergenciaDTO() == null || nuevoAlumno.getContactoEmergenciaDTO().isEmpty()) {
+        if (nuevoAlumno.getContactosEmergencia() == null || nuevoAlumno.getContactosEmergencia().isEmpty()) {
             throw new IllegalArgumentException("Debe agregar al menos un contacto de emergencia");
         }
 
         // Aquí asumimos que ContactoEmergenciaDTO tiene los campos necesarios para crear ContactoEmergencia
         List<ContactoEmergencia> contactoEmergencia = new ArrayList<>();
-        List<ContactoEmergenciaDTO> nuevoContactoEmergencia = nuevoAlumno.getContactoEmergenciaDTO();
+        List<ContactoEmergenciaDTO> nuevoContactoEmergencia = nuevoAlumno.getContactosEmergencia();
         for (ContactoEmergenciaDTO contactoDTO : nuevoContactoEmergencia) {
             ContactoEmergencia contacto = getContactoEmergencia(contactoDTO);
             // Setea aquí los demás campos necesarios

@@ -35,7 +35,7 @@ public class Alumno {
 //tengo que poner una ficha medica por pdf, lo cargo a la base de datos como un blob?
     @ManyToOne
     @JoinColumn(name = "localidad_id", nullable = false)
-    private Localidad localidad;
+    private Localidad localidadAlumno;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "alumno_id", nullable = false)
     private List<ContactoEmergencia> contactosEmergencia = new ArrayList<>();

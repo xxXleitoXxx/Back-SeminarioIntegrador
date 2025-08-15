@@ -20,8 +20,8 @@ public class AlumnoDto {
     private String nombreAlumno;
     private String apellidoAlumno;
     private int telefonoAlumno;
-    private String MailAlumno;
+    private String mailAlumno;
     private LocalidadDto localidadAlumno;
-    private List<ContactoEmergenciaDTO> contactoEmergenciaDTO;
+    private List<ContactoEmergenciaDTO> contactosEmergencia;
     private FichaMedicaDTO fichaMedicaDTO;
 }

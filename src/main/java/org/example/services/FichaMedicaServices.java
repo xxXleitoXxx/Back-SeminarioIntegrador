@@ -17,18 +17,22 @@ public class FichaMedicaServices {
 
     @Autowired
     FichaMedicaRepository fichaMedicaRepository;
-@Autowired
+    @Autowired
     AlumnoRepository alumnoRepository;
+
     //Metodo Para Agregar una ficha medica a un Alumno
     public void agregarFichaMedica(Long AlumnoId,FichaMedicaDTO fichaMedicaDTO) {
+        Alumno alumno = alumnoRepository.findById(AlumnoId)
+                .orElseThrow(() -> new NoSuchElementException("Alumno no encontrado con ID: " + AlumnoId));
+
         FichaMedica fichaMedica= new FichaMedica();
         fichaMedica.setArchivo(fichaMedicaDTO.getArchivo());
         List<FichaMedica> fichaMedicaList= new ArrayList<>();
         fichaMedicaList.add(fichaMedica);
         // Buscamos el alumno por su ID
-        Alumno alumno = alumnoRepository.findById(AlumnoId)
-                .orElseThrow(() -> new NoSuchElementException("Alumno no encontrado con ID: " + AlumnoId));
-      alumno.setFichasMedicas(fichaMedicaList);
+
+        alumno.getFichasMedicas().add(fichaMedica);
+        alumnoRepository.save(alumno);
     // Lógica para agregar la ficha médica
         // Aquí se podría llamar a un repositorio para guardar la ficha médica en la base de datos
     }
