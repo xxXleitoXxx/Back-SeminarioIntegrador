@@ -1,9 +1,6 @@
 package org.example.services;
 
-import org.example.entity.Alumno;
-import org.example.entity.Inscripcion;
-import org.example.entity.RangoEtario;
-import org.example.entity.TipoClase;
+import org.example.entity.*;
 import org.example.repository.AlumnoRepository;
 import org.example.repository.InscripcionRepository;
 import org.example.repository.TipoClaseRepository;
@@ -16,6 +13,7 @@ import java.util.Date;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class InscripcionService {
@@ -102,6 +100,29 @@ public class InscripcionService {
             throw new IllegalStateException("Ya no hay cupos para esta clase");
         }
     }
+
+
+    public Inscripcion bajaInscripcion(Long nroInscripcion){
+        Inscripcion bajaInscripto = inscripcionRepository.findByNroInscripcion(nroInscripcion).orElseThrow(() -> new IllegalArgumentException("Inscripcion no encontrada"));
+        if (bajaInscripto.getFechaBajaInscripcion()  != null){
+            throw new IllegalArgumentException("Inscripcion y  dada de baja");
+        }
+
+        bajaInscripto.setFechaBajaInscripcion(new Date());
+        return inscripcionRepository.save(bajaInscripto);
+
+    }
+
+    public List<Inscripcion> getInscripciones() {
+
+        List<Inscripcion> inscripciones = inscripcionRepository.findAll();
+
+        return inscripciones;
+    }
+
+
+
+
 
 
 

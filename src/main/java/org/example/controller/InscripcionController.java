@@ -22,7 +22,7 @@ InscripcionService inscripcionService;
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al obtener los alumnos: " + e.getMessage());
         }
         @PostMapping("/{dni}/{codTipoClase}")
-        public ResponseEntity<?> getInscripciones(int dni,Long codTipoClase) {
+        public ResponseEntity<?> inscribir ( int dni, Long codTipoClase){
             try {
                 // Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
                 return ResponseEntity.status(HttpStatus.CREATED).body(inscripcionService.inscribirAlumno());
@@ -30,4 +30,5 @@ InscripcionService inscripcionService;
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al obtener los alumnos: " + e.getMessage());
             }
 
-}
+        }
+    }

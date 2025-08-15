@@ -19,5 +19,7 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Long> 
 
     // Traer todas las inscripciones activas de una clase (para contar cupo)
     List<Inscripcion> findByTipoClase(TipoClase tipoClase);
+
+    Optional<Inscripcion> findByNroInscripcion(Long nroInscripcion);
 }
 
