@@ -1,5 +1,9 @@
 package org.example.services;
 
+import org.example.dto.AlumnoDto;
+import org.example.dto.InscripcionDTO;
+import org.example.dto.InscripcionGetDTO;
+import org.example.dto.TipoClaseDTO;
 import org.example.entity.*;
 import org.example.repository.AlumnoRepository;
 import org.example.repository.InscripcionRepository;
@@ -9,11 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
-import java.util.Date;
-
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class InscripcionService {
@@ -23,7 +23,7 @@ public class InscripcionService {
     AlumnoRepository alumnoRepository;
     @Autowired
     TipoClaseRepository tipoClaseRepository;
-    public Inscripcion inscribirAlumno(int dniAlumno, Long codTipoClase) {
+    public InscripcionDTO inscribirAlumno(int dniAlumno, Long codTipoClase) {
         // Buscar alumno y validar que no esté dado de baja
         Alumno alumno = alumnoRepository.findByDniAlumno(dniAlumno)
                 .orElseThrow(() -> new IllegalArgumentException("Alumno no encontrado"));
@@ -50,8 +50,18 @@ public class InscripcionService {
         inscripcion.setNroInscripcion(null); // Si es autogenerado por la DB, lo podés omitir
         inscripcion.setAlumno(alumno);
         inscripcion.setTipoClase(tipoClase);
+        inscripcionRepository.save(inscripcion);
+        AlumnoDto alumnoDto = new AlumnoDto();
+        alumnoDto.setNombreAlumno(alumno.getNombreAlumno());
+        alumnoDto.setDniAlumno(alumno.getDniAlumno());
+        TipoClaseDTO tipoClaseDTO = new TipoClaseDTO();
+        tipoClaseDTO.setNombreTipoClase(tipoClase.getNombreTipoClase());
+        tipoClaseDTO.setCodTipoClase(tipoClase.getCodTipoClase());
+        InscripcionDTO inscripcionDTO = new InscripcionDTO();
+        inscripcionDTO.setAlumnoDto(alumnoDto);
+        inscripcionDTO.setTipoClaseDTO(tipoClaseDTO);
+        return inscripcionDTO;
 
-        return inscripcionRepository.save(inscripcion);
     }
 
 
@@ -102,31 +112,45 @@ public class InscripcionService {
     }
 
 
-    public Inscripcion bajaInscripcion(Long nroInscripcion){
+    public String bajaInscripcion(Long nroInscripcion){
         Inscripcion bajaInscripto = inscripcionRepository.findByNroInscripcion(nroInscripcion).orElseThrow(() -> new IllegalArgumentException("Inscripcion no encontrada"));
         if (bajaInscripto.getFechaBajaInscripcion()  != null){
             throw new IllegalArgumentException("Inscripcion y  dada de baja");
         }
 
         bajaInscripto.setFechaBajaInscripcion(new Date());
-        return inscripcionRepository.save(bajaInscripto);
-
+        inscripcionRepository.save(bajaInscripto);
+        return "Inscripcion dada de baja correctamente.";
     }
 
-    public List<Inscripcion> getInscripciones() {
+    public List<InscripcionGetDTO> getInscripciones() {
 
         List<Inscripcion> inscripciones = inscripcionRepository.findAll();
+        List<InscripcionGetDTO> inscripcionesGetDTO = new ArrayList<>();
+        for (Inscripcion inscripcion : inscripciones) {
+            InscripcionGetDTO inscripcionGetDTO = new InscripcionGetDTO();
+            inscripcionGetDTO.setNroInscripcion(inscripcion.getNroInscripcion());
+            inscripcionGetDTO.setFechaInscripcion(inscripcion.getFechaInscripcion());
+            inscripcionGetDTO.setFechaBajaInscripcion(inscripcion.getFechaBajaInscripcion());
 
-        return inscripciones;
+            // Obtener datos del alumno
+            Alumno alumno = inscripcion.getAlumno();
+            if (alumno != null) {
+                inscripcionGetDTO.setDniAlumno(alumno.getDniAlumno());
+                inscripcionGetDTO.setNombreAlumno(alumno.getNombreAlumno());
+            }
+
+            // Obtener datos del tipo de clase
+            TipoClase tipoClase = inscripcion.getTipoClase();
+            if (tipoClase != null) {
+                inscripcionGetDTO.setCodTipoClase(tipoClase.getCodTipoClase());
+                inscripcionGetDTO.setNombreTipoClase(tipoClase.getNombreTipoClase());
+            }
+
+            // Agregar DTO a la lista
+            inscripcionesGetDTO.add(inscripcionGetDTO);
+        }
+        return inscripcionesGetDTO;
     }
-
-
-
-
-
-
-
-
-
 
 }

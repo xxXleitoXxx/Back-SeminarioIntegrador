@@ -1,5 +1,7 @@
 package org.example.controller;
 
+import org.example.entity.Inscripcion;
+import org.example.entity.Profesor;
 import org.example.repository.InscripcionRepository;
 import org.example.services.InscripcionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,28 +9,56 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping(path = "api/v1/Inscripcion")
 @CrossOrigin(origins = "*")
 public class InscripcionController {
-@Autowired
-InscripcionService inscripcionService;
+
+    @Autowired
+    InscripcionService inscripcionService;
+
     @GetMapping
     public ResponseEntity<?> getInscripciones() {
         try {
-            // Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
-            return ResponseEntity.status(HttpStatus.CREATED).body(inscripcionService.inscribirAlumno());
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(inscripcionService.getInscripciones());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al obtener los alumnos: " + e.getMessage());
-        }
-        @PostMapping("/{dni}/{codTipoClase}")
-        public ResponseEntity<?> inscribir ( int dni, Long codTipoClase){
-            try {
-                // Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
-                return ResponseEntity.status(HttpStatus.CREATED).body(inscripcionService.inscribirAlumno());
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al obtener los alumnos: " + e.getMessage());
-            }
-
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Error al obtener las inscripciones: " + e.getMessage());
         }
     }
+
+    @PostMapping("/{dni}/{codTipoClase}")
+    public ResponseEntity<?> inscribir(
+            @PathVariable int dni,
+            @PathVariable Long codTipoClase) {
+        try {
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(inscripcionService.inscribirAlumno(dni, codTipoClase));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Error al inscribir alumno: " + e.getMessage());
+        }
+    }
+
+    // PUT: Dar de baja profesor por DNI
+    @PutMapping("/{nro}")
+    public ResponseEntity<?> bajaInscripcion(@PathVariable("nro") Long nroInscripcion) {
+        try {
+            String inscripcion = inscripcionService.bajaInscripcion(nroInscripcion);
+            return ResponseEntity.ok(inscripcion);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error al dar de baja inscripcion : " + e.getMessage());
+        }
+    }
+}
+
+
+
