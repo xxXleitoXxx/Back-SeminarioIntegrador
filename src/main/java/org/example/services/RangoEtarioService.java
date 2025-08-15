@@ -32,6 +32,7 @@ public class RangoEtarioService {
         rangoetario.setEdadDesde(nuevorangoetario.getEdadDesde());
         rangoetario.setEdadHasta(nuevorangoetario.getEdadHasta());
         rangoetario.setFechaBajaRangoEtario(nuevorangoetario.getFechaBajaRangoEtario());
+        rangoetario.setNombreRangoEtario(nuevorangoetario.getNombreRangoEtario());
 
 
         return rangoEtarioRepository.save(rangoetario);
@@ -63,7 +64,7 @@ public class RangoEtarioService {
 
         //verificar que no haya un rango etario existente con esos rangos
         existeRango(rangoEtarioDTO.getEdadDesde(), rangoEtarioDTO.getEdadHasta());
-
+        rangoEtario.setNombreRangoEtario(rangoEtario.getNombreRangoEtario());
         rangoEtario.setEdadHasta(rangoEtarioDTO.getEdadHasta());
         rangoEtario.setEdadDesde(rangoEtarioDTO.getEdadDesde());
         return rangoEtarioRepository.save(rangoEtario);

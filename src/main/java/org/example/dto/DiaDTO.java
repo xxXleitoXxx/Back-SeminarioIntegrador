@@ -12,12 +12,8 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 
-public class RangoEtarioDTO {
-    private Long codRangoEtario;
-    private int edadDesde;
-    private int edadHasta;
-    private Date fechaBajaRangoEtario;
-    private String nombreRangoEtario;
+public class DiaDTO {
+    private Long codDIa;
+    private Date fechaBajaDia;
+    private String nombreDia;
 }
-
-
