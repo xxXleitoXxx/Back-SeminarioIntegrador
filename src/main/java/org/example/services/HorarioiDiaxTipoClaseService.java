@@ -26,22 +26,27 @@ public class HorarioiDiaxTipoClaseService {
     public HorarioiDiaxTipoClase crearHorarioiDiaxTipoClase(HorarioiDiaxTipoClaseDTO horarioiDiaxTipoClaseDTO) {
             Dia dia = diaRepository.findByCodDia(horarioiDiaxTipoClaseDTO.getDiaDTO().getCodDia())
                     .orElseThrow(() -> new IllegalArgumentException("Día no encontrado: " + horarioiDiaxTipoClaseDTO.getDiaDTO().getCodDia()));
-            boolean existeSolapado = horarioiDiaxTipoClaseRepository
-                    .existsByDiaAndFechaBajaHFxTCIsNullAndHoraDesdeLessThanAndHoraHastaGreaterThan(
-                            dia,
-                            Time.valueOf(horarioiDiaxTipoClaseDTO.getHoraHasta()),
-                            Time.valueOf(horarioiDiaxTipoClaseDTO.getHoraDesde())
-                    );
+            Time horaDesde;
+            Time horaHasta;
+            if (horarioiDiaxTipoClaseDTO.getHoraDesde() == null || horarioiDiaxTipoClaseDTO.getHoraHasta() == null) {
+                throw new IllegalArgumentException("Las horas no pueden ser nulas");
+            }
+            horaDesde = horarioiDiaxTipoClaseDTO.getHoraDesde();
+            horaHasta = horarioiDiaxTipoClaseDTO.getHoraHasta();
 
-            if (existeSolapado) {
-                throw new IllegalArgumentException(
-                        "El horario " + horarioiDiaxTipoClaseDTO.getHoraDesde() + " - " + horarioiDiaxTipoClaseDTO.getHoraHasta() +
-                                " se solapa con otro horario en el día: " + horarioiDiaxTipoClaseDTO.getDiaDTO().getCodDia()
-                );
+            // Buscar todos los horarios activos para ese día
+            List<HorarioiDiaxTipoClase> horariosActivos = horarioiDiaxTipoClaseRepository.findByDiaAndFechaBajaHFxTCIsNull(dia);
+            for (HorarioiDiaxTipoClase existente : horariosActivos) {
+                if (horaDesde.before(existente.getHoraHasta()) && horaHasta.after(existente.getHoraDesde())) {
+                    throw new IllegalArgumentException(
+                            "El horario " + horaDesde + " - " + horaHasta +
+                                    " se solapa con otro horario en el día: " + horarioiDiaxTipoClaseDTO.getDiaDTO().getCodDia()
+                    );
+                }
             }
             HorarioiDiaxTipoClase nuevoHorario = new HorarioiDiaxTipoClase();
-            nuevoHorario.setHoraDesde(Time.valueOf(horarioiDiaxTipoClaseDTO.getHoraDesde()));
-            nuevoHorario.setHoraHasta(Time.valueOf(horarioiDiaxTipoClaseDTO.getHoraHasta()));
+            nuevoHorario.setHoraDesde(horaDesde);
+            nuevoHorario.setHoraHasta(horaHasta);
             nuevoHorario.setDia(dia);
             TipoClase tipoClase = tipoClaseRepository.findBycodTipoClase(horarioiDiaxTipoClaseDTO.getTipoClase().getCodTipoClase())
                     .orElseThrow(() -> new IllegalArgumentException("Tipo de clase no encontrado: " + horarioiDiaxTipoClaseDTO.getTipoClase().getCodTipoClase()));

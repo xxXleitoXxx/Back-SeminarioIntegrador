@@ -22,8 +22,13 @@ public class ConfHorarioTipoClase {
     private Date fechaVigenciaConf;
     private Date fechaFinVigenciaConf;
 
-    @OneToMany
-    @JoinColumn(name = "conf_id") // esto crea la columna conf_id en HorarioiDiaxTipoClase
+    // ConfHorarioTipoClase
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @JoinColumn(name = "conf_id") // columna creada en la tabla HorarioiDiaxTipoClase
     private List<HorarioiDiaxTipoClase> horarioiDiaxTipoClaseList = new ArrayList<>();
+
+// HorarioiDiaxTipoClase
+// no necesita referencia al padre
+
 }
 

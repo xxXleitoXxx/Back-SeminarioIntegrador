@@ -30,6 +30,7 @@ public class HorarioiDiaxTipoClase {
     private Dia dia;
     @ManyToOne
     @JoinColumn(name = "tipoclase_id", nullable = false)
+
     private TipoClase tipoClase;
 
 }

@@ -21,8 +21,8 @@ import java.util.List;
 public class HorarioiDiaxTipoClaseDTO {
     private Long nroHFxTC;
     private Date fechaBajaHFxTC;
-    private String horaDesde;
-    private String horaHasta;
+    private Time horaDesde;
+    private Time horaHasta;
     private DiaDTO diaDTO;
     private TipoClaseDTO tipoClase;
 }

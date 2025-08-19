@@ -28,7 +28,7 @@ public class ConfHorarioTipoClaseController {
     HorarioiDiaxTipoClaseService horarioiDiaxTipoClaseService;
 
     @PostMapping
-    public ResponseEntity<?> crearConf(ConfHorarioTipoClaseDTO confHorarioTipoClaseDTO){
+    public ResponseEntity<?> crearConf(@RequestBody ConfHorarioTipoClaseDTO confHorarioTipoClaseDTO){
         try{
             //Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
             ConfHorarioTipoClase confHorarioTipoClase = confHorarioTipoClaseService.crearConfHorarioTipoClase(confHorarioTipoClaseDTO);
@@ -38,31 +38,16 @@ public class ConfHorarioTipoClaseController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear la configuracion: " + e.getMessage());
         }
     }
-
-//    @PostMapping("/{confId}/horarios")
-//    public ResponseEntity<HorarioiDiaxTipoClase> agregarHorario(
-//            @PathVariable("confId") Long confId,
-//            @RequestBody HorarioiDiaxTipoClaseDTO nuevoHorarioDTO) {
-//        try {
-//            HorarioiDiaxTipoClase horario = horarioiDiaxTipoClaseService.crearHorarioiDiaxTipoClase(nuevoHorarioDTO, confId);
-//            return ResponseEntity.status(HttpStatus.CREATED).body(horario);
-//        } catch (NoSuchElementException e) {
-//            return ResponseEntity.notFound().build();
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.badRequest().body(null);
-//        }
-//    }
-//
-//    @GetMapping
-//    public ResponseEntity<?> obtenerConfigs() {
-//        try {
-//            List<ConfHorarioTipoClase> configuraciones = confHorarioTipoClaseService.getConfHorarioTipoClase();
-//            return ResponseEntity.ok(configuraciones); // 200 OK
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                    .body("Error al obtener las configuraciones: " + e.getMessage());
-//        }
-//    }
+    @GetMapping
+    public ResponseEntity<?> obtenerConfigs() {
+        try {
+            List<ConfHorarioTipoClase> configuraciones = confHorarioTipoClaseService.getConfHorarioTipoClase();
+            return ResponseEntity.ok(configuraciones); // 200 OK
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error al obtener las configuraciones: " + e.getMessage());
+        }
+    }
 
 
 }

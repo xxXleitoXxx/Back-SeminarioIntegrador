@@ -20,6 +20,6 @@ public class ConfHorarioTipoClaseDTO {
 
     private Date fechaVigenciaConf;
     private Date fechaFinVigenciaConf;
-    private List<HorarioiDiaxTipoClaseDTO> horarioiDiaxTipoClaseList = new ArrayList<>();
+    private List<HorarioiDiaxTipoClaseDTO> horarioiDiaxTipoClaseList;
 }
 
