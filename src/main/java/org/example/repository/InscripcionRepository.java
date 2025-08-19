@@ -14,12 +14,11 @@ import java.util.Optional;
 @Repository
 public interface InscripcionRepository extends JpaRepository<Inscripcion, Long> {
 
-    // Buscar si ya existe una inscripción activa para un alumno en una clase
-    Optional<Inscripcion> findByAlumnoAndTipoClase(Alumno alumno, TipoClase tipoClase);
+    // Buscar si ya existe una inscripción activa para un alumno en una clase (no dada de baja)
+    Optional<Inscripcion> findByAlumnoAndTipoClaseAndFechaBajaInscripcionIsNull(Alumno alumno, TipoClase tipoClase);
 
     // Traer todas las inscripciones activas de una clase (para contar cupo)
     List<Inscripcion> findByTipoClase(TipoClase tipoClase);
 
     Optional<Inscripcion> findByNroInscripcion(Long nroInscripcion);
 }
-

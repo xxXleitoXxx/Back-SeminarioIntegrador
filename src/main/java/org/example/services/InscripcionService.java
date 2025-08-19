@@ -66,11 +66,10 @@ public class InscripcionService {
 
 
     public void existeInscripcion(Alumno alumno,TipoClase tipoClase){
-        inscripcionRepository.findByAlumnoAndTipoClase(alumno,tipoClase).ifPresent(inscripcion -> {
-            if (inscripcion.getFechaBajaInscripcion() == null){
+        inscripcionRepository.findByAlumnoAndTipoClaseAndFechaBajaInscripcionIsNull(alumno, tipoClase)
+            .ifPresent(inscripcion -> {
                 throw new IllegalArgumentException("Ya esta inscripto");
-            }
-        });
+            });
     }
     public void edadAdecuada(Alumno alumno,TipoClase tipoClase){
         int edadAlumno = calcularEdad(alumno.getFechaNacAlumno());

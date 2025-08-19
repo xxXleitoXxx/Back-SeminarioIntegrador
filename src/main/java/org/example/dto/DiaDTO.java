@@ -13,7 +13,10 @@ import java.util.Date;
 @Builder
 
 public class DiaDTO {
-    private Long codDIa;
+    private Long codDia;       // <-- corregido
     private Date fechaBajaDia;
     private String nombreDia;
+
+
 }
+
