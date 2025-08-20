@@ -3,6 +3,7 @@ package org.example.dto;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,5 +15,6 @@ public class ProfesorDto {
     private String nombreProfesor;
     private int telefonoProfesor;
     private Date fechaBajaProfesor;
+    private List<TipoClaseDTO> tipoClaseDTO;
 }
 

@@ -46,13 +46,23 @@ public class AlumnoController {
         }
            }
     @PostMapping("/{alumnoId}/contactos")
-    public ResponseEntity<ContactoEmergencia> agregarContacto(@PathVariable("alumnoId") Long alumnoId,
+    public ResponseEntity<?> agregarContacto(@PathVariable("alumnoId") Long alumnoId,
                                                               @RequestBody ContactoEmergencia nuevoContacto) {
         try {
             ContactoEmergencia contactoGuardado = AlumnoService.agregarContactoEmergencia(alumnoId, nuevoContacto);
             return ResponseEntity.status(HttpStatus.CREATED).body(contactoGuardado);
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al dar de baja al alumno: " + e.getMessage());
+        }
+    }
+//baja alumno
+    @PostMapping("/{nroAlumno}/baja")
+    public ResponseEntity<?> bajaAlumno(@PathVariable("nroAlumno") Long nroAlumno) {
+        try {
+            Alumno alumnoBaja = AlumnoService.bajaAlumno(nroAlumno);
+            return ResponseEntity.ok(alumnoBaja);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al dar de baja al alumno: " + e.getMessage());
         }
     }
 

@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
 @CrossOrigin(origins = "*")
 public class ConfHorarioTipoClaseController {
     @Autowired
-    ConfHorarioTipoClaseService confHorarioTipoClaseService;
+ ConfHorarioTipoClaseService confHorarioTipoClaseService;
     @Autowired
     HorarioiDiaxTipoClaseService horarioiDiaxTipoClaseService;
 

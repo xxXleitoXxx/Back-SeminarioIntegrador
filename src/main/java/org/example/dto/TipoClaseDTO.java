@@ -1,5 +1,6 @@
 package org.example.dto;
 
+import jakarta.persistence.ManyToMany;
 import lombok.*;
 import org.example.entity.RangoEtario;
 
@@ -19,5 +20,6 @@ public class TipoClaseDTO {
     private Date fechaBajaTipoClase;
     private String nombreTipoClase;
     private RangoEtario rangoEtario;
+
 
 }

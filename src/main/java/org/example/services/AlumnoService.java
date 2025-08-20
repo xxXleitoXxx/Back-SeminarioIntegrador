@@ -122,4 +122,13 @@ public class AlumnoService {
     public Alumno getAlumnoByNroAlumno(Long nroAlumno) {
         return alumnoRepository.findById(nroAlumno).orElseThrow(() -> new NoSuchElementException("Alumno no encontrado con nroAlumno: " + nroAlumno));
     }
+
+    public Alumno bajaAlumno(Long nroAlumno) {
+        Alumno alumno = getAlumnoByNroAlumno(nroAlumno);
+        if (alumno.getFechaBajaAlumno() != null) {
+            throw new IllegalArgumentException("El alumno ya está dado de baja");
+        }
+        alumno.setFechaBajaAlumno(new java.util.Date()); // Asignamos la fecha de baja actual
+        return alumnoRepository.save(alumno); // Guardamos el alumno con la fecha de baja
+    }
 }
