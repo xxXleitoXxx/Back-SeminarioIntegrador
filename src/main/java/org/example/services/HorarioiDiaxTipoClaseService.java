@@ -34,16 +34,6 @@ public class HorarioiDiaxTipoClaseService {
             horaDesde = horarioiDiaxTipoClaseDTO.getHoraDesde();
             horaHasta = horarioiDiaxTipoClaseDTO.getHoraHasta();
 
-            // Buscar todos los horarios activos para ese día
-            List<HorarioiDiaxTipoClase> horariosActivos = horarioiDiaxTipoClaseRepository.findByDiaAndFechaBajaHFxTCIsNull(dia);
-            for (HorarioiDiaxTipoClase existente : horariosActivos) {
-                if (horaDesde.before(existente.getHoraHasta()) && horaHasta.after(existente.getHoraDesde())) {
-                    throw new IllegalArgumentException(
-                            "El horario " + horaDesde + " - " + horaHasta +
-                                    " se solapa con otro horario en el día: " + horarioiDiaxTipoClaseDTO.getDiaDTO().getCodDia()
-                    );
-                }
-            }
             HorarioiDiaxTipoClase nuevoHorario = new HorarioiDiaxTipoClase();
             nuevoHorario.setHoraDesde(horaDesde);
             nuevoHorario.setHoraHasta(horaHasta);
@@ -59,11 +49,10 @@ public class HorarioiDiaxTipoClaseService {
     public String bajaHorario(Long nroHorario) {
         HorarioiDiaxTipoClase horario = horarioiDiaxTipoClaseRepository.findByNroHFxTC(nroHorario)
                 .orElseThrow(() -> new IllegalArgumentException("No existe un horario con ese número."));
-        if (horario.getFechaBajaHFxTC() != null) {
-            throw new IllegalArgumentException("El horario ya está dado de baja.");
+        if (horario.getFechaBajaHFxTC() == null) {
+            horario.setFechaBajaHFxTC(new Date());
+            horarioiDiaxTipoClaseRepository.save(horario);
         }
-        horario.setFechaBajaHFxTC(new Date());
-        horarioiDiaxTipoClaseRepository.save(horario);
         return "El horario ha sido dado de baja exitosamente.";
     }
     public List<HorarioiDiaxTipoClase> getHorarios(Long confId) {
@@ -76,3 +65,4 @@ public class HorarioiDiaxTipoClaseService {
 
 
 }
+

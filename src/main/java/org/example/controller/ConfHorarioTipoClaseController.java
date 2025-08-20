@@ -31,7 +31,7 @@ public class ConfHorarioTipoClaseController {
     public ResponseEntity<?> crearConf(@RequestBody ConfHorarioTipoClaseDTO confHorarioTipoClaseDTO){
         try{
             //Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
-            ConfHorarioTipoClase confHorarioTipoClase = confHorarioTipoClaseService.crearConfHorarioTipoClase(confHorarioTipoClaseDTO);
+            ConfHorarioTipoClaseDTO confHorarioTipoClase = confHorarioTipoClaseService.crearConfHorarioTipoClase(confHorarioTipoClaseDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(confHorarioTipoClase);
 
         }catch (Exception e){
@@ -41,7 +41,7 @@ public class ConfHorarioTipoClaseController {
     @GetMapping
     public ResponseEntity<?> obtenerConfigs() {
         try {
-            List<ConfHorarioTipoClase> configuraciones = confHorarioTipoClaseService.getConfHorarioTipoClase();
+            List<ConfHorarioTipoClaseDTO> configuraciones = confHorarioTipoClaseService.getConfHorarioTipoClase();
             return ResponseEntity.ok(configuraciones); // 200 OK
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
