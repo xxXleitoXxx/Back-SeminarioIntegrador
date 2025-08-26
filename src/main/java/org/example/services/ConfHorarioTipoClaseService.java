@@ -1,10 +1,7 @@
 package org.example.services;
 
 import org.example.dto.*;
-import org.example.entity.Alumno;
-import org.example.entity.ConfHorarioTipoClase;
-import org.example.entity.ContactoEmergencia;
-import org.example.entity.HorarioiDiaxTipoClase;
+import org.example.entity.*;
 import org.example.repository.ConfHorarioTipoClaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +18,8 @@ public class ConfHorarioTipoClaseService {
     ConfHorarioTipoClaseRepository confHorarioTipoClaseRepository;
     @Autowired
     HorarioiDiaxTipoClaseService horarioiDiaxTipoClaseService;
+    @Autowired
+    ClaseService claseService;
 
 
     public ConfHorarioTipoClaseDTO crearConfHorarioTipoClase(ConfHorarioTipoClaseDTO confHorarioTipoClaseDTO) {
@@ -82,6 +81,8 @@ public class ConfHorarioTipoClaseService {
             horarioDTOs.add(horarioDTO);
         }
         nuevaConfDTO.setHorarioiDiaxTipoClaseList(horarioDTOs);
+
+        claseService.generarclases();
         return nuevaConfDTO;
 
 
