@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface DiaRepository extends JpaRepository<Dia,Long> {
     Optional<Dia> findByCodDia(Long codDia);
-    Optional<Dia> findByNombreDia(String nombreDia);
+    Optional<Dia> findByNombreDiaAndFechaBajaDiaIsNull(String nombreDia);
 }

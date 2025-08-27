@@ -19,7 +19,7 @@ public class RangoEtarioService {
     RangoEtarioRepository rangoEtarioRepository;
 
     //metodo para crear un nuevo rango etario
-    public RangoEtario crearRangoEtario(RangoEtarioDTO nuevorangoetario){
+    public RangoEtarioDTO crearRangoEtario(RangoEtarioDTO nuevorangoetario){
 
         //verificar que el codigo no este en uso
         existeRangoEtario(nuevorangoetario.getCodRangoEtario());
@@ -33,9 +33,14 @@ public class RangoEtarioService {
         rangoetario.setEdadHasta(nuevorangoetario.getEdadHasta());
         rangoetario.setFechaBajaRangoEtario(nuevorangoetario.getFechaBajaRangoEtario());
         rangoetario.setNombreRangoEtario(nuevorangoetario.getNombreRangoEtario());
-
-
-        return rangoEtarioRepository.save(rangoetario);
+        rangoEtarioRepository.save(rangoetario);
+        RangoEtarioDTO rangoEtarioDTO = new RangoEtarioDTO();
+        rangoEtarioDTO.setCodRangoEtario(rangoetario.getCodRangoEtario());
+        rangoEtarioDTO.setEdadDesde(rangoetario.getEdadDesde());
+        rangoEtarioDTO.setEdadHasta(rangoetario.getEdadHasta());
+        rangoEtarioDTO.setFechaBajaRangoEtario(rangoetario.getFechaBajaRangoEtario());
+        rangoEtarioDTO.setNombreRangoEtario(rangoetario.getNombreRangoEtario());
+        return rangoEtarioDTO;
 
     }
 

@@ -31,6 +31,10 @@ public class HorarioiDiaxTipoClaseService {
             if (horarioiDiaxTipoClaseDTO.getHoraDesde() == null || horarioiDiaxTipoClaseDTO.getHoraHasta() == null) {
                 throw new IllegalArgumentException("Las horas no pueden ser nulas");
             }
+            if (horarioiDiaxTipoClaseDTO.getHoraDesde().after(horarioiDiaxTipoClaseDTO.getHoraHasta()) ||
+                            horarioiDiaxTipoClaseDTO.getHoraDesde().equals(horarioiDiaxTipoClaseDTO.getHoraHasta())) {
+                throw new IllegalArgumentException("La hora de inicio debe ser anterior a la hora de fin.");
+            }
             horaDesde = horarioiDiaxTipoClaseDTO.getHoraDesde();
             horaHasta = horarioiDiaxTipoClaseDTO.getHoraHasta();
 

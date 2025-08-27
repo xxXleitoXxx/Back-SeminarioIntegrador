@@ -27,8 +27,8 @@ public class TipoClaseController {
     public ResponseEntity<?> crearTipoClase(@RequestBody TipoClaseDTO tipoClaseDTO){
         try{
             //Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
-            TipoClase tipoClase = tipoClaseService.crearTipoClase(tipoClaseDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(tipoClase);
+            TipoClaseDTO tipoClaseDTO1 = tipoClaseService.crearTipoClase(tipoClaseDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(tipoClaseDTO1);
 
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el tipoclase: " + e.getMessage());

@@ -16,7 +16,7 @@ public class DiaService {
     DiaRepository  diaRepository;
 
     public Dia crearDia(DiaDTO diaDTO){
-        diaRepository.findByNombreDia(diaDTO.getNombreDia())
+        diaRepository.findByNombreDiaAndFechaBajaDiaIsNull(diaDTO.getNombreDia())
                 .ifPresent(dia -> {
                     if (diaDTO.getFechaBajaDia() == null){
                         throw new IllegalArgumentException("Ya existe un dia con ese nombre.");

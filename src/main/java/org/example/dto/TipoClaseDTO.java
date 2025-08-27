@@ -19,7 +19,7 @@ public class TipoClaseDTO {
     private int cupoMaxTipoClase;
     private Date fechaBajaTipoClase;
     private String nombreTipoClase;
-    private RangoEtario rangoEtario;
+    private RangoEtarioDTO rangoEtarioDTO;
 
 
-}
+    }

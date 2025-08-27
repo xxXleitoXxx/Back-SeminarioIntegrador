@@ -84,11 +84,6 @@ public class ConfHorarioTipoClaseService {
 
         claseService.generarclases();
         return nuevaConfDTO;
-
-
-
-
-
     }
 
     private boolean haySolapamientoHorarios(List<HorarioiDiaxTipoClaseDTO> horarios) {

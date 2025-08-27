@@ -3,7 +3,9 @@ package org.example.services;
 
 import org.example.dto.TipoClaseDTO;
 import org.example.entity.Profesor;
+import org.example.entity.RangoEtario;
 import org.example.entity.TipoClase;
+import org.example.repository.RangoEtarioRepository;
 import org.example.repository.TipoClaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,9 +17,10 @@ import java.util.List;
 public class TipoClaseService {
     @Autowired
     TipoClaseRepository tipoClaseRepository;
-
+    @Autowired
+    RangoEtarioRepository rangoEtarioRepository;
     //metodo crear tipo clase
-    public TipoClase crearTipoClase(TipoClaseDTO nuevoTipoClase){
+    public TipoClaseDTO crearTipoClase(TipoClaseDTO nuevoTipoClase){
         //metodo que verifica si ya existe el tipoclase
         validarTipoClaseNoExistente(nuevoTipoClase.getCodTipoClase());
 
@@ -25,8 +28,15 @@ public class TipoClaseService {
         tipoClase.setFechaBajaTipoClase(nuevoTipoClase.getFechaBajaTipoClase());
         tipoClase.setCupoMaxTipoClase(nuevoTipoClase.getCupoMaxTipoClase());
         tipoClase.setNombreTipoClase(nuevoTipoClase.getNombreTipoClase());
-        tipoClase.setRangoEtario(nuevoTipoClase.getRangoEtario());
-        return tipoClaseRepository.save(tipoClase);
+        RangoEtario rangoEtario = rangoEtarioRepository.findBycodRangoEtario(nuevoTipoClase.getRangoEtarioDTO().getCodRangoEtario()).orElseThrow();
+        tipoClase.setRangoEtario(rangoEtario);
+        tipoClaseRepository.save(tipoClase);
+        TipoClaseDTO tipoClaseDTO = new TipoClaseDTO();
+        tipoClaseDTO.setCodTipoClase(tipoClase.getCodTipoClase());
+        tipoClaseDTO.setCupoMaxTipoClase(tipoClase.getCupoMaxTipoClase());
+        tipoClaseDTO.setNombreTipoClase(tipoClase.getNombreTipoClase());
+        tipoClaseDTO.setRangoEtarioDTO(nuevoTipoClase.getRangoEtarioDTO());
+        return tipoClaseDTO;
     }
     public void validarTipoClaseNoExistente(Long codTipoClase) {
         tipoClaseRepository.findBycodTipoClase(codTipoClase)
@@ -45,8 +55,8 @@ public class TipoClaseService {
         if (tipoClase.getFechaBajaTipoClase() != null){
             throw new IllegalArgumentException("El tipoclase está dado de baja.");
         }
-
-        tipoClase.setRangoEtario(tipoClaseDTO.getRangoEtario());
+        RangoEtario  rangoEtario = rangoEtarioRepository.findBycodRangoEtario(tipoClaseDTO.getRangoEtarioDTO().getCodRangoEtario()).orElseThrow(() -> new IllegalArgumentException("No existe un rango etario con el codigo " + tipoClaseDTO.getRangoEtarioDTO().getCodRangoEtario()));
+        tipoClase.setRangoEtario(rangoEtario);
         tipoClase.setCupoMaxTipoClase(tipoClaseDTO.getCupoMaxTipoClase());
         tipoClase.setNombreTipoClase(tipoClaseDTO.getNombreTipoClase());
         return tipoClaseRepository.save(tipoClase);

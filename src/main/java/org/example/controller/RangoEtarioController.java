@@ -29,8 +29,8 @@ public class RangoEtarioController {
     @PostMapping
     public ResponseEntity<?> crearRangoEtario(@RequestBody RangoEtarioDTO rangoEtarioDTO){
         try{
-            RangoEtario rangoetariocreado = rangoEtarioService.crearRangoEtario(rangoEtarioDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(rangoetariocreado);
+            RangoEtarioDTO rangoetariocreadoDTO = rangoEtarioService.crearRangoEtario(rangoEtarioDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(rangoetariocreadoDTO);
 
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el rango etario: " + e.getMessage());
