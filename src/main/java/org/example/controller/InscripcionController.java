@@ -47,7 +47,7 @@ public class InscripcionController {
         }
     }
 
-    // PUT: Dar de baja profesor por DNI
+    // PUT: Dar de baja inscripcion por DNI
     @PutMapping("/{nro}")
     public ResponseEntity<?> bajaInscripcion(@PathVariable("nro") Long nroInscripcion) {
         try {

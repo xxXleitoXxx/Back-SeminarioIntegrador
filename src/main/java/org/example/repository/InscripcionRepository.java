@@ -21,4 +21,6 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Long> 
     List<Inscripcion> findByTipoClase(TipoClase tipoClase);
     List<Inscripcion> findByTipoClaseAndFechaBajaInscripcionIsNull(TipoClase tipoClase);
     Optional<Inscripcion> findByNroInscripcion(Long nroInscripcion);
+
+    List<Inscripcion> findByAlumnoAndFechaBajaInscripcionIsNull(Alumno alumno);
 }

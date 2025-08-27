@@ -71,6 +71,14 @@ public class InscripcionService {
                 throw new IllegalArgumentException("Ya esta inscripto");
             });
     }
+    public void existenInscripciones(Alumno alumno){
+      List<Inscripcion> InscripcionesAlumno = inscripcionRepository.findByAlumnoAndFechaBajaInscripcionIsNull(alumno);
+        if (!InscripcionesAlumno.isEmpty()){
+            throw new IllegalArgumentException("El alumno tiene inscripciones activas en clases");
+        }
+    }
+
+
     public void edadAdecuada(Alumno alumno,TipoClase tipoClase){
         int edadAlumno = calcularEdad(alumno.getFechaNacAlumno());
 

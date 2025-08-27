@@ -19,9 +19,9 @@ public class AlumnoDto {
     private Date fechaNacAlumno;
     private String nombreAlumno;
     private String apellidoAlumno;
-    private int telefonoAlumno;
+    private long telefonoAlumno;
     private String mailAlumno;
     private LocalidadDto localidadAlumno;
     private List<ContactoEmergenciaDTO> contactosEmergencia;
-    private FichaMedicaDTO fichaMedicaDTO;
+    private List<FichaMedicaDTO> fichaMedicaDTO;
 }

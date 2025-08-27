@@ -19,7 +19,7 @@ import java.util.NoSuchElementException;
 public class AlumnoController {
     //Se agrega @Autowired para inyectar el servicio AlumnoServiceImp
     @Autowired
-    private AlumnoService AlumnoService;
+    private AlumnoService alumnoService;
     @Autowired
     private FichaMedicaServices fichaMedicaServices;
 
@@ -27,7 +27,7 @@ public class AlumnoController {
     public ResponseEntity<?>obtenerAlumnos(){
         try {
             // Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
-            return ResponseEntity.status(HttpStatus.CREATED).body(AlumnoService.getAlumnos());
+            return ResponseEntity.status(HttpStatus.CREATED).body(alumnoService.getAlumnos());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al obtener los alumnos: " + e.getMessage());
         }
@@ -38,28 +38,43 @@ public class AlumnoController {
         // Aquí puedes mapear AlumnoDto a la entidad Alumno y sus relaciones
         // Guardar el alumno en la base de datos
         try {
-            Alumno alumnocreado= AlumnoService.crearAlumno(alumnoDto);
-            fichaMedicaServices.agregarFichaMedica(alumnocreado.getNroAlumno(),alumnoDto.getFichaMedicaDTO());
+            Alumno alumnocreado= alumnoService.crearAlumno(alumnoDto);
+
+            for(FichaMedicaDTO fichamedicadto: alumnoDto.getFichaMedicaDTO()) {
+                fichaMedicaServices.agregarFichaMedica(alumnocreado.getNroAlumno(),fichamedicadto);
+            }
             return ResponseEntity.status(HttpStatus.CREATED).body(alumnocreado);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al crear el alumno: " + e.getMessage());
         }
            }
+
+           @PutMapping("/{alumnoId}")
+    public ResponseEntity<?> ModificarAlumno(@PathVariable("alumnoId") Long alumnoId,
+                                              @RequestBody AlumnoDto alumnodto){
+
+               try {
+                   AlumnoDto alumnoModificado = alumnoService.modificarAlumno(alumnodto);
+                   return ResponseEntity.status(HttpStatus.CREATED).body(alumnoModificado);
+               } catch (Exception e) {
+                   return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al modificar el alumno: " + e.getMessage());
+               }
+           }
     @PostMapping("/{alumnoId}/contactos")
     public ResponseEntity<?> agregarContacto(@PathVariable("alumnoId") Long alumnoId,
                                                               @RequestBody ContactoEmergencia nuevoContacto) {
         try {
-            ContactoEmergencia contactoGuardado = AlumnoService.agregarContactoEmergencia(alumnoId, nuevoContacto);
+            ContactoEmergencia contactoGuardado = alumnoService.agregarContactoEmergencia(alumnoId, nuevoContacto);
             return ResponseEntity.status(HttpStatus.CREATED).body(contactoGuardado);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al dar de baja al alumno: " + e.getMessage());
         }
     }
 //baja alumno
-    @PostMapping("/{nroAlumno}/baja")
-    public ResponseEntity<?> bajaAlumno(@PathVariable("nroAlumno") Long nroAlumno) {
+    @PutMapping("/{dniAlumno}/baja")
+    public ResponseEntity<?> bajaAlumno(@PathVariable("dniAlumno") int dniAlumno) {
         try {
-            Alumno alumnoBaja = AlumnoService.bajaAlumno(nroAlumno);
+            Alumno alumnoBaja = alumnoService.bajaAlumno(dniAlumno);
             return ResponseEntity.ok(alumnoBaja);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al dar de baja al alumno: " + e.getMessage());
