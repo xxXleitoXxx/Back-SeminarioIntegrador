@@ -66,7 +66,7 @@ public class RangoEtarioController {
     public ResponseEntity<?> getREs() {
         try {
             // Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
-            List<RangoEtario> rangoEtarios = rangoEtarioService.getRangoEtarios();
+            List<RangoEtarioDTO> rangoEtarios = rangoEtarioService.getRangoEtarios();
             return ResponseEntity.status(HttpStatus.CREATED).body(rangoEtarios);
 
         } catch (Exception e) {

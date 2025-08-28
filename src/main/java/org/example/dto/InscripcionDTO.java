@@ -18,7 +18,6 @@ public class InscripcionDTO {
     private Long nroInscripcion;
     private Date fechaBajaInscripcion;
     private Date fechaInscripcion;
-
     private AlumnoDto alumnoDto;
     private TipoClaseDTO tipoClaseDTO;
 }

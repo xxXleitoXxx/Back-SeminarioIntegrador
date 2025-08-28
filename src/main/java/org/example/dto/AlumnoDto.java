@@ -24,4 +24,5 @@ public class AlumnoDto {
     private LocalidadDto localidadAlumno;
     private List<ContactoEmergenciaDTO> contactosEmergencia;
     private List<FichaMedicaDTO> fichaMedicaDTO;
+    private Date fechaBajaAlumno;
 }

@@ -9,6 +9,7 @@ import org.example.repository.RangoEtarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -89,13 +90,23 @@ public class RangoEtarioService {
     }
 
     //Traer todos los profesores
-    public List<RangoEtario> getRangoEtarios() {
+    public List<RangoEtarioDTO> getRangoEtarios() {
 
         List<RangoEtario> rangosEtarios = rangoEtarioRepository.findAll();
+        List<RangoEtarioDTO> rangoEtarioDtos = new ArrayList<>();
+        for (RangoEtario  rangoEtario : rangosEtarios) {
+            RangoEtarioDTO rangoEtarioDTO = new RangoEtarioDTO();
+            rangoEtarioDTO.setCodRangoEtario(rangoEtario.getCodRangoEtario());
+            rangoEtarioDTO.setEdadDesde(rangoEtario.getEdadDesde());
+            rangoEtarioDTO.setEdadHasta(rangoEtario.getEdadHasta());
+            rangoEtarioDTO.setFechaBajaRangoEtario(rangoEtario.getFechaBajaRangoEtario());
+            rangoEtarioDTO.setNombreRangoEtario(rangoEtario.getNombreRangoEtario());
+            rangoEtarioDtos.add(rangoEtarioDTO);
+        }
         if (rangosEtarios.isEmpty()) {
             throw new IllegalArgumentException("No existen rangos etarios registrados");
         }
-        return rangosEtarios;
+        return rangoEtarioDtos;
     }
 
 

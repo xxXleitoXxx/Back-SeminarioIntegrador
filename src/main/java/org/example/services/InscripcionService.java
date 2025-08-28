@@ -1,9 +1,6 @@
 package org.example.services;
 
-import org.example.dto.AlumnoDto;
-import org.example.dto.InscripcionDTO;
-import org.example.dto.InscripcionGetDTO;
-import org.example.dto.TipoClaseDTO;
+import org.example.dto.*;
 import org.example.entity.*;
 import org.example.repository.AlumnoRepository;
 import org.example.repository.InscripcionRepository;
@@ -130,34 +127,57 @@ public class InscripcionService {
         return "Inscripcion dada de baja correctamente.";
     }
 
-    public List<InscripcionGetDTO> getInscripciones() {
+    public List<InscripcionDTO> getInscripciones() {
 
         List<Inscripcion> inscripciones = inscripcionRepository.findAll();
-        List<InscripcionGetDTO> inscripcionesGetDTO = new ArrayList<>();
+        List<InscripcionDTO> inscripcionesDTO = new ArrayList<>();
         for (Inscripcion inscripcion : inscripciones) {
-            InscripcionGetDTO inscripcionGetDTO = new InscripcionGetDTO();
-            inscripcionGetDTO.setNroInscripcion(inscripcion.getNroInscripcion());
-            inscripcionGetDTO.setFechaInscripcion(inscripcion.getFechaInscripcion());
-            inscripcionGetDTO.setFechaBajaInscripcion(inscripcion.getFechaBajaInscripcion());
+            InscripcionDTO inscripcionDTO = new InscripcionDTO();
+            inscripcionDTO.setNroInscripcion(inscripcion.getNroInscripcion());
+            inscripcionDTO.setFechaInscripcion(inscripcion.getFechaInscripcion());
+            inscripcionDTO.setFechaBajaInscripcion(inscripcion.getFechaBajaInscripcion());
 
             // Obtener datos del alumno
             Alumno alumno = inscripcion.getAlumno();
-            if (alumno != null) {
-                inscripcionGetDTO.setDniAlumno(alumno.getDniAlumno());
-                inscripcionGetDTO.setNombreAlumno(alumno.getNombreAlumno());
+            if (alumno == null){
+                throw new IllegalArgumentException("El alumno asociado a la inscripción no existe.");
             }
+            AlumnoDto alumnoDto = new AlumnoDto();
+                alumnoDto.setNroAlumno(alumno.getNroAlumno());
+                alumnoDto.setNombreAlumno(alumno.getNombreAlumno());
+                alumnoDto.setDniAlumno(alumno.getDniAlumno());
+                alumnoDto.setFechaNacAlumno(alumno.getFechaNacAlumno());
+                alumnoDto.setFechaBajaAlumno(alumno.getFechaBajaAlumno());
+                inscripcionDTO.setAlumnoDto(alumnoDto);
+
 
             // Obtener datos del tipo de clase
             TipoClase tipoClase = inscripcion.getTipoClase();
-            if (tipoClase != null) {
-                inscripcionGetDTO.setCodTipoClase(tipoClase.getCodTipoClase());
-                inscripcionGetDTO.setNombreTipoClase(tipoClase.getNombreTipoClase());
-            }
-
+           if (tipoClase  == null) {
+               throw new IllegalArgumentException("El tipo de clase asociado a la inscripción no existe.");
+           }
+            TipoClaseDTO tipoClaseDTO = new TipoClaseDTO();
+                tipoClaseDTO.setCodTipoClase(tipoClase.getCodTipoClase());
+                tipoClaseDTO.setNombreTipoClase(tipoClase.getNombreTipoClase());
+                tipoClaseDTO.setCupoMaxTipoClase(tipoClase.getCupoMaxTipoClase());
+                tipoClaseDTO.setFechaBajaTipoClase(tipoClase.getFechaBajaTipoClase());
+                // Asignar el DTO de RangoEtario si es necesario
+                if (tipoClase.getRangoEtario() != null) {
+                    RangoEtario rangoEtario = tipoClase.getRangoEtario();
+                    // Aquí podrías crear y asignar un RangoEtarioDTO si lo tienes definido
+                    // Por ejemplo:
+                     RangoEtarioDTO rangoEtarioDTO = new RangoEtarioDTO();
+                     rangoEtarioDTO.setCodRangoEtario(rangoEtario.getCodRangoEtario());
+                     rangoEtarioDTO.setEdadDesde(rangoEtario.getEdadDesde());
+                     rangoEtarioDTO.setEdadHasta(rangoEtario.getEdadHasta());
+                     rangoEtarioDTO.setNombreRangoEtario(rangoEtario.getNombreRangoEtario());
+                     tipoClaseDTO.setRangoEtarioDTO(rangoEtarioDTO);
+                }
+                inscripcionDTO.setTipoClaseDTO(tipoClaseDTO);
             // Agregar DTO a la lista
-            inscripcionesGetDTO.add(inscripcionGetDTO);
+            inscripcionesDTO.add(inscripcionDTO);
         }
-        return inscripcionesGetDTO;
+        return inscripcionesDTO;
     }
 
 }

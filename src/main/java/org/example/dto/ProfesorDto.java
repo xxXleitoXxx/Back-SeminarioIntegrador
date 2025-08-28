@@ -16,5 +16,6 @@ public class ProfesorDto {
     private int telefonoProfesor;
     private Date fechaBajaProfesor;
     private List<TipoClaseDTO> tipoClaseDTO;
+
 }
 

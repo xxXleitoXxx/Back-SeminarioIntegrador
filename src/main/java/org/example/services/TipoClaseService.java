@@ -31,12 +31,8 @@ public class TipoClaseService {
         RangoEtario rangoEtario = rangoEtarioRepository.findBycodRangoEtario(nuevoTipoClase.getRangoEtarioDTO().getCodRangoEtario()).orElseThrow();
         tipoClase.setRangoEtario(rangoEtario);
         tipoClaseRepository.save(tipoClase);
-        TipoClaseDTO tipoClaseDTO = new TipoClaseDTO();
-        tipoClaseDTO.setCodTipoClase(tipoClase.getCodTipoClase());
-        tipoClaseDTO.setCupoMaxTipoClase(tipoClase.getCupoMaxTipoClase());
-        tipoClaseDTO.setNombreTipoClase(tipoClase.getNombreTipoClase());
-        tipoClaseDTO.setRangoEtarioDTO(nuevoTipoClase.getRangoEtarioDTO());
-        return tipoClaseDTO;
+
+        return nuevoTipoClase;
     }
     public void validarTipoClaseNoExistente(Long codTipoClase) {
         tipoClaseRepository.findBycodTipoClase(codTipoClase)

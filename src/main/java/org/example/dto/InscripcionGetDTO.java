@@ -19,4 +19,6 @@ public class InscripcionGetDTO {
     private Date fechaBajaInscripcion;
     private String nombreAlumno;
     private String nombreTipoClase;
+    private int edadDesde;
+    private int edadHasta;
 }
