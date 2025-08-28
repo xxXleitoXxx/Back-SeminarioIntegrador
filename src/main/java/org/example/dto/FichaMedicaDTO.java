@@ -14,8 +14,8 @@ import java.util.Date;
 public class FichaMedicaDTO {
     private Long id;
 
-    private Date fechaBajaFichaMedica;
-
+    private Date vigenciaDesde;
+    private Date vigenciaHasta;
     @Lob
     private byte[] archivo; // Aquí se guarda el PDF o imagen
 }

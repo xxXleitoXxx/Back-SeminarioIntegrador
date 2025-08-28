@@ -49,21 +49,11 @@ public class AlumnoService {
         Localidad localidad = localidadService.buscarLocalidadPorCodigoYFechaBaja(nuevoAlumno.getLocalidadAlumno().getCodLocalidad());
         alumno.setLocalidadAlumno(localidad); // Asignamos la localidad al Alumno
 
-        //comprobamos que la ficha medica no sea nula
-        if (nuevoAlumno.getFichaMedicaDTO() == null) {
-            throw new IllegalArgumentException("La ficha medica debe ser cargada");
-        }//Creamos una nueva FichaMedica y la asociamos al Alumno
-        /*
-        List <FichaMedica> fichasMedicas= new ArrayList<>();
-        FichaMedica fichaMedica = new FichaMedica();
-        fichasMedicas.add(fichaMedica);
-        fichaMedica.setFechaBajaFichaMedica(null); // Asignamos la fecha de baja como nula al crear
-        fichaMedica.setArchivo(nuevoAlumno.getFichaMedicaDTO().getArchivo());
-        alumno.setFichasMedicas(fichasMedicas);
-
-         */
-        // Asignamos los contactos de emergencia del DTO al Alumno
-        //comprobamos que el contacto de emergencia no sea nulo
+// Quitamos la comprobacion porque no hace falta cargarlas de inmediato
+//        //comprobamos que la ficha medica no sea nula
+//        if (nuevoAlumno.getFichaMedicaDTO() == null) {
+//            throw new IllegalArgumentException("La ficha medica debe ser cargada");
+//        }
         if (nuevoAlumno.getContactosEmergencia() == null || nuevoAlumno.getContactosEmergencia().isEmpty()) {
             throw new IllegalArgumentException("Debe agregar al menos un contacto de emergencia");
         }
@@ -199,8 +189,8 @@ public class AlumnoService {
             for (FichaMedica ficha : fichaMedica) {
                 FichaMedicaDTO fichaMedicaDTO = new FichaMedicaDTO();
                 fichaMedicaDTO.setId(ficha.getNroFichaMedica());
-                fichaMedicaDTO.setFechaBajaFichaMedica(ficha.getFechaHoraBaja());
-
+                fichaMedicaDTO.setVigenciaDesde(ficha.getVigenciaDesde());
+                fichaMedicaDTO.setVigenciaHasta(ficha.getVigenciaHasta());
                 fichasMedicasDTO.add(fichaMedicaDTO);
             }
             // Asignamos las fichas medicas al DTO

@@ -8,7 +8,11 @@ import org.example.repository.FichaMedicaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -24,14 +28,20 @@ public class FichaMedicaServices {
     public void agregarFichaMedica(Long AlumnoId,FichaMedicaDTO fichaMedicaDTO) {
         Alumno alumno = alumnoRepository.findById(AlumnoId)
                 .orElseThrow(() -> new NoSuchElementException("Alumno no encontrado con ID: " + AlumnoId));
-
-        FichaMedica fichaMedica= new FichaMedica();
-        fichaMedica.setArchivo(fichaMedicaDTO.getArchivo());
-        List<FichaMedica> fichaMedicaList= new ArrayList<>();
-        fichaMedicaList.add(fichaMedica);
-        // Buscamos el alumno por su ID
-
-        alumno.getFichasMedicas().add(fichaMedica);
+if (fichaMedicaDTO.getArchivo().length > 15) {
+    System.out.println("Archivo recibido con tamaño: " + fichaMedicaDTO.getArchivo().length + " bytes");
+    FichaMedica fichaMedica = new FichaMedica();
+    fichaMedica.setArchivo(fichaMedicaDTO.getArchivo());
+    LocalDate fechaActual = LocalDate.now();
+    LocalDate fechaBaja = fechaActual.plusYears(1);
+    Date FechaVigenciaHasta = Date.from(fechaBaja.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    fichaMedica.setVigenciaDesde(new Date());
+    fichaMedica.setVigenciaHasta(FechaVigenciaHasta);
+    List<FichaMedica> fichaMedicaList = new ArrayList<>();
+    fichaMedicaList.add(fichaMedica);
+    // Buscamos el alumno por su ID
+    alumno.getFichasMedicas().add(fichaMedica);
+}
         alumnoRepository.save(alumno);
     // Lógica para agregar la ficha médica
         // Aquí se podría llamar a un repositorio para guardar la ficha médica en la base de datos

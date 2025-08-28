@@ -15,8 +15,8 @@ public class FichaMedica {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long NroFichaMedica;
-    private Date fechaHoraBaja;
-
+    private Date vigenciaDesde;
+    private Date vigenciaHasta;
     @Column(columnDefinition = "LONGBLOB")
     @Lob
     private byte[] archivo;
