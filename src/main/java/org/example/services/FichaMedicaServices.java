@@ -28,7 +28,18 @@ public class FichaMedicaServices {
     public void agregarFichaMedica(Long AlumnoId,FichaMedicaDTO fichaMedicaDTO) {
         Alumno alumno = alumnoRepository.findById(AlumnoId)
                 .orElseThrow(() -> new NoSuchElementException("Alumno no encontrado con ID: " + AlumnoId));
+
 if (fichaMedicaDTO.getArchivo().length > 15) {
+    //debemos comprobar que el alumno tenga una ficha medica vigente y darla de baja
+    Date ahora = new Date();
+            for(FichaMedica fm:alumno.getFichasMedicas()){
+                if (fm.getVigenciaDesde().before(ahora) && fm.getVigenciaHasta().after(ahora)) {
+                    fm.setVigenciaHasta(ahora);
+                    break;
+                }
+            }
+
+
     System.out.println("Archivo recibido con tamaño: " + fichaMedicaDTO.getArchivo().length + " bytes");
     FichaMedica fichaMedica = new FichaMedica();
     fichaMedica.setArchivo(fichaMedicaDTO.getArchivo());
