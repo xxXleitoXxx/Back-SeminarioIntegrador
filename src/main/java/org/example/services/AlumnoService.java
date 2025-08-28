@@ -183,6 +183,7 @@ public class AlumnoService {
             alumnoDto.setMailAlumno(alumno.getMailAlumno());
             alumnoDto.setTelefonoAlumno(alumno.getTelefonoAlumno());
             alumnoDto.setDomicilioAlumno(alumno.getDomicilioAlumno());
+            alumnoDto.setFechaBajaAlumno(alumno.getFechaBajaAlumno());
 
             // Asignamos la localidad al DTO
             if (alumno.getLocalidadAlumno() != null) {
