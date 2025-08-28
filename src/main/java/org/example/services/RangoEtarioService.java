@@ -5,7 +5,9 @@ import org.example.dto.RangoEtarioDTO;
 
 import org.example.entity.Profesor;
 import org.example.entity.RangoEtario;
+import org.example.entity.TipoClase;
 import org.example.repository.RangoEtarioRepository;
+import org.example.repository.TipoClaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ import java.util.Optional;
 public class RangoEtarioService {
     @Autowired
     RangoEtarioRepository rangoEtarioRepository;
+    @Autowired
+    TipoClaseRepository tipoClaseRepository;
 
     //metodo para crear un nuevo rango etario
     public RangoEtarioDTO crearRangoEtario(RangoEtarioDTO nuevorangoetario){
@@ -78,15 +82,24 @@ public class RangoEtarioService {
     }
 
     //dar de baja rangoetario
-    public RangoEtario  bajaRangoEtario(Long codRangoEtario, Date fechaBajaRE){
+    public RangoEtarioDTO  bajaRangoEtario(Long codRangoEtario, Date fechaBajaRE){
         RangoEtario rangoEtario = rangoEtarioRepository.findBycodRangoEtario(codRangoEtario).orElseThrow(() -> new IllegalArgumentException("No existe un rango etario   con el codigo " + codRangoEtario));
         if (rangoEtario.getFechaBajaRangoEtario() != null){
             throw new IllegalStateException("No se puede dar de baja un rango etario dado de baja");
         }
+        if (!tipoClaseRepository.findByRangoEtario(rangoEtario).isEmpty()){;
+            throw new IllegalStateException("No se puede dar de baja un rango etario asociado a un tipo de clase activo");
+        }
 
         rangoEtario.setFechaBajaRangoEtario(fechaBajaRE);
-        return rangoEtarioRepository.save(rangoEtario);
-
+        rangoEtarioRepository.save(rangoEtario);
+        RangoEtarioDTO rangoEtarioDTO = new RangoEtarioDTO();
+        rangoEtarioDTO.setCodRangoEtario(rangoEtario.getCodRangoEtario());
+        rangoEtarioDTO.setEdadDesde(rangoEtario.getEdadDesde());
+        rangoEtarioDTO.setEdadHasta(rangoEtario.getEdadHasta());
+        rangoEtarioDTO.setFechaBajaRangoEtario(rangoEtario.getFechaBajaRangoEtario());
+        rangoEtarioDTO.setNombreRangoEtario(rangoEtario.getNombreRangoEtario());
+        return rangoEtarioDTO;
     }
 
     //Traer todos los profesores

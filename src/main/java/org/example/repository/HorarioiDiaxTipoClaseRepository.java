@@ -3,6 +3,7 @@ package org.example.repository;
 import org.example.dto.DiaDTO;
 import org.example.entity.Dia;
 import org.example.entity.HorarioiDiaxTipoClase;
+import org.example.entity.TipoClase;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +18,7 @@ public interface HorarioiDiaxTipoClaseRepository extends JpaRepository<HorarioiD
             Dia dia, Time nuevaHoraHasta, Time nuevaHoraDesde);
 
     Optional<HorarioiDiaxTipoClase> findByNroHFxTC(Long nroHFxTC);
-
-    List<HorarioiDiaxTipoClase> findByDiaAndFechaBajaHFxTCIsNull(Dia dia);
+    List<HorarioiDiaxTipoClase>  findByTipoClaseAndFechaBajaHFxTCIsNull(TipoClase tipoClase);
 }
+
+

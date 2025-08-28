@@ -54,7 +54,7 @@ public class RangoEtarioController {
     @PutMapping("/{cod}/baja")
     public ResponseEntity<?> bajaRE(@PathVariable("cod") Long codRangoEtario) {
         try {
-            RangoEtario rangoEtarioBaja = rangoEtarioService.bajaRangoEtario(codRangoEtario, new Date());
+            RangoEtarioDTO rangoEtarioBaja = rangoEtarioService.bajaRangoEtario(codRangoEtario, new Date());
             return ResponseEntity.ok(rangoEtarioBaja);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

@@ -21,7 +21,7 @@ public class ProfesorController {
     public ResponseEntity<?> getProfesores(){
         try{
             //Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
-            List<Profesor> profesorcreado = profesorService.getProfesores();
+            List<ProfesorDto> profesorcreado = profesorService.getProfesores();
             return ResponseEntity.status(HttpStatus.CREATED).body(profesorcreado);
 
         }catch (Exception e){
@@ -35,7 +35,7 @@ public class ProfesorController {
     public ResponseEntity<?> crearProfesor(@RequestBody ProfesorDto profesorDto){
         try{
             //Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
-            Profesor profesorcreado = profesorService.crearProfesor(profesorDto);
+            ProfesorDto profesorcreado = profesorService.crearProfesor(profesorDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(profesorcreado);
 
         }catch (Exception e){
@@ -44,11 +44,11 @@ public class ProfesorController {
     }
 
     // PUT: Modificar profesor por DNI
-    @PutMapping("/{dni}")
-    public ResponseEntity<?> modificarProfesor(@PathVariable("dni") int dniProfesor,
+    @PutMapping("/{nro}")
+    public ResponseEntity<?> modificarProfesor(@PathVariable("nro") Long nroProfesor,
                                                @RequestBody ProfesorDto profeActualizado) {
         try {
-            Profesor profesorModificado = profesorService.modificarProfesor(dniProfesor, profeActualizado);
+            ProfesorDto profesorModificado = profesorService.modificarProfesor(nroProfesor, profeActualizado);
             return ResponseEntity.ok(profesorModificado);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -57,10 +57,10 @@ public class ProfesorController {
     }
 
     // PUT: Dar de baja profesor por DNI
-    @PutMapping("/{dni}/baja")
-    public ResponseEntity<?> darDeBajaProfesor(@PathVariable("dni") int dniProfesor) {
+    @PutMapping("/{nro}/baja")
+    public ResponseEntity<?> darDeBajaProfesor(@PathVariable("nro") Long nroProfesor) {
         try {
-            Profesor profesorBaja = profesorService.bajaProfesor(dniProfesor, new Date());
+            ProfesorDto profesorBaja = profesorService.bajaProfesor(nroProfesor, new Date());
             return ResponseEntity.ok(profesorBaja);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

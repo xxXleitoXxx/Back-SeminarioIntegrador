@@ -40,7 +40,7 @@ public class TipoClaseController {
     public ResponseEntity<?> modificarTipoClase(@PathVariable("cod") Long  codTipoClase,
                                                 @RequestBody TipoClaseDTO tipoClaseDTO) {
         try {
-            TipoClase tipoClase = tipoClaseService.modificarTipoClase(codTipoClase, tipoClaseDTO);
+            TipoClaseDTO tipoClase = tipoClaseService.modificarTipoClase(codTipoClase, tipoClaseDTO);
             return ResponseEntity.ok(tipoClase);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -52,7 +52,7 @@ public class TipoClaseController {
     @PutMapping("/{cod}/baja")
     public ResponseEntity<?> bajaTipoClase(@PathVariable("cod") Long codTipoClase) {
         try {
-            TipoClase tipoClase = tipoClaseService.bajaTipoClase(codTipoClase, new Date());
+            TipoClaseDTO tipoClase = tipoClaseService.bajaTipoClase(codTipoClase, new Date());
             return ResponseEntity.ok(tipoClase);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -64,7 +64,7 @@ public class TipoClaseController {
     public ResponseEntity<?> getTipoClases() {
         try {
             // Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
-            List<TipoClase> tipoClases = tipoClaseService.getTipoClases();
+            List<TipoClaseDTO> tipoClases = tipoClaseService.getTipoClases();
             return ResponseEntity.status(HttpStatus.CREATED).body(tipoClases);
 
         } catch (Exception e) {

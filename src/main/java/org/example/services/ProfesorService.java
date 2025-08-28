@@ -6,6 +6,7 @@ import org.example.repository.ProfesorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,9 +16,18 @@ public class ProfesorService {
     ProfesorRepository profesorRepository;
 
     //metodo para crear un nuevo profesor
-    public Profesor crearProfesor(ProfesorDto nuevoprofe){
+    public ProfesorDto crearProfesor(ProfesorDto nuevoprofe){
         //validamos que no exista el profesor en la base de datos
-        existeProfesorPorDni(nuevoprofe.getDniProfesor());
+        profesorRepository.findByNroProfesor(nuevoprofe.getNroProfesor())
+                .ifPresent(profesor -> {
+                    if (nuevoprofe.getFechaBajaProfesor() == null){
+                        throw new IllegalArgumentException("Ya existe un profesor con ese numero de profesor.");
+                    }
+                });
+        //validamos que no exista el profesor en la base de datos por su dni
+        if (!profesorRepository.findByDniProfesorAndFechaBajaProfesorIsNull(nuevoprofe.getDniProfesor()).isEmpty()){
+            throw new IllegalArgumentException("Ya existe un profesor con ese dni.");
+        }
 
         Profesor profesor= new Profesor();
         profesor.setNroProfesor(nuevoprofe.getNroProfesor());
@@ -25,48 +35,68 @@ public class ProfesorService {
         profesor.setNombreProfesor(nuevoprofe.getNombreProfesor());
         profesor.setTelefonoProfesor(nuevoprofe.getTelefonoProfesor());
         profesor.setFechaBajaProfesor(nuevoprofe.getFechaBajaProfesor());
-        return profesorRepository.save(profesor);
+        profesorRepository.save(profesor);
+        ProfesorDto  profesorDTO = new ProfesorDto();
+        profesorDTO.setNroProfesor(profesor.getNroProfesor());
+        profesorDTO.setDniProfesor(profesor.getDniProfesor());
+        profesorDTO.setNombreProfesor(profesor.getNombreProfesor());
+        profesorDTO.setTelefonoProfesor(profesor.getTelefonoProfesor());
+        profesorDTO.setFechaBajaProfesor(profesor.getFechaBajaProfesor());
+        return profesorDTO;
 
-    }
-
-    //Metodo para validar si un profesor existe por su DNI
-    public void existeProfesorPorDni(int dniProfesor) {
-        profesorRepository.findByDniProfesor(dniProfesor).ifPresent(profesor -> {
-            if (profesor.getFechaBajaProfesor() == null) {
-                throw new IllegalArgumentException("Ya existe un profesor activo con el DNI proporcionado");
-            }
-        });
     }
 
     //modificar profesor
-    public Profesor modificarProfesor(int dniProfesor, ProfesorDto profeactualizado) {
-        Profesor profesorexistente = profesorRepository.findByDniProfesor(dniProfesor)
-                .orElseThrow(() -> new IllegalArgumentException("No existe un profesor con el DNI " + dniProfesor));
+    public ProfesorDto modificarProfesor(Long nroProfesor, ProfesorDto profeactualizado) {
+        Profesor profesorexistente = profesorRepository.findByNroProfesor(nroProfesor)
+                .orElseThrow(() -> new IllegalArgumentException("No existe un profesor con el numero: " + nroProfesor));
 
         // Validar que no esté dado de baja
         if (profesorexistente.getFechaBajaProfesor() != null) {
             throw new IllegalStateException("No se puede modificar un profesor dado de baja");
         }
+        //validamos que no exista el profesor en la base de datos por su dni
+        if (!profesorRepository.findByDniProfesorAndFechaBajaProfesorIsNull(profeactualizado.getDniProfesor()).isEmpty()){
+            throw new IllegalArgumentException("Ya existe un profesor con ese dni.");
+        }
 
         // Actualizar datos permitidos
         profesorexistente.setTelefonoProfesor(profeactualizado.getTelefonoProfesor());
         profesorexistente.setNombreProfesor(profeactualizado.getNombreProfesor());
-        // No actualizar DNI ni fecha de baja desde aquí
-
-        return profesorRepository.save(profesorexistente);
+        profesorexistente.setDniProfesor(profeactualizado.getDniProfesor());
+        profesorRepository.save(profesorexistente);
+        ProfesorDto profesorDTO = new ProfesorDto();
+        profesorDTO.setNroProfesor(profesorexistente.getNroProfesor());
+        profesorDTO.setDniProfesor(profesorexistente.getDniProfesor());
+        profesorDTO.setNombreProfesor(profesorexistente.getNombreProfesor());
+        profesorDTO.setTelefonoProfesor(profesorexistente.getTelefonoProfesor());
+        profesorDTO.setFechaBajaProfesor(profesorexistente.getFechaBajaProfesor());
+        return profesorDTO;
     }
 
 
     //Traer todos los profesores
-    public List<Profesor> getProfesores() {
+    public List<ProfesorDto> getProfesores() {
 
         List<Profesor> profesores = profesorRepository.findAll();
-    
-        return profesores;
+        if (profesores.isEmpty()) {
+            throw new IllegalArgumentException("No existen profesores registrados");
+        }
+        List<ProfesorDto> profesorDtos = new ArrayList<>();
+        for (Profesor profesor : profesores) {
+            ProfesorDto profesorDTO = new ProfesorDto();
+            profesorDTO.setNroProfesor(profesor.getNroProfesor());
+            profesorDTO.setDniProfesor(profesor.getDniProfesor());
+            profesorDTO.setNombreProfesor(profesor.getNombreProfesor());
+            profesorDTO.setTelefonoProfesor(profesor.getTelefonoProfesor());
+            profesorDTO.setFechaBajaProfesor(profesor.getFechaBajaProfesor());
+            profesorDtos.add(profesorDTO);
+        }
+        return profesorDtos;
     }
     //Metodo para dar de baja profesor
-    public Profesor bajaProfesor(int dniProfesor, Date fechaBaja){
-        Profesor profesorexistente= profesorRepository.findByDniProfesor(dniProfesor) .orElseThrow(() -> new IllegalArgumentException("No existe un profesor con el dni " + dniProfesor));
+    public ProfesorDto bajaProfesor(Long nroProfesor, Date fechaBaja){
+        Profesor profesorexistente= profesorRepository.findByNroProfesor(nroProfesor) .orElseThrow(() -> new IllegalArgumentException("No existe un profesor con el numero " + nroProfesor));
 
         // Validar que no esté dado de baja
         if (profesorexistente.getFechaBajaProfesor() != null) {
@@ -74,8 +104,15 @@ public class ProfesorService {
         }
         //Actualizar datos
         profesorexistente.setFechaBajaProfesor(fechaBaja);
+        profesorRepository.save(profesorexistente);
+        ProfesorDto profesorDTO = new ProfesorDto();
+        profesorDTO.setNroProfesor(profesorexistente.getNroProfesor());
+        profesorDTO.setDniProfesor(profesorexistente.getDniProfesor());
+        profesorDTO.setNombreProfesor(profesorexistente.getNombreProfesor());
+        profesorDTO.setTelefonoProfesor(profesorexistente.getTelefonoProfesor());
+        profesorDTO.setFechaBajaProfesor(profesorexistente.getFechaBajaProfesor());
+        return profesorDTO;
 
-        return profesorRepository.save(profesorexistente);
     }
 
 }
