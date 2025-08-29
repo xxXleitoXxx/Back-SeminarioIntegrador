@@ -17,6 +17,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class Localidad {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codLocalidad;
     private String nombreLocalidad;
     private Date fechaBajaLocalidad;

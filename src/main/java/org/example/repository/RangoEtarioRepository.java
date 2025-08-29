@@ -12,5 +12,6 @@ public interface RangoEtarioRepository extends JpaRepository<RangoEtario,Long> {
 
     Optional<RangoEtario>  findBycodRangoEtario(Long codRangoEtario);
     Optional<RangoEtario> findByEdadDesdeAndEdadHasta(int edadDesde, int edadHasta);
+    Optional<RangoEtario> findByNombreRangoEtarioAndFechaBajaRangoEtarioIsNull(String nombreRangoEtario);
 
 }

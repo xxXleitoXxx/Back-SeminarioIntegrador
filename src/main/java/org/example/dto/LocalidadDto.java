@@ -12,7 +12,6 @@ import java.util.Date;
 @Getter
 @Setter
 public class LocalidadDto {
-    @Id
     private Long codLocalidad;
     private String nombreLocalidad;
     private Date fechaBajaLocalidad;

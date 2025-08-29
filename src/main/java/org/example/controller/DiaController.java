@@ -26,7 +26,7 @@ public class DiaController {
     public ResponseEntity<?> crearDia(@RequestBody DiaDTO diaDTO){
         try{
             //Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
-            Dia dia = diaService.crearDia(diaDTO);
+            DiaDTO dia = diaService.crearDia(diaDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(dia);
 
         }catch (Exception e){
@@ -39,7 +39,7 @@ public class DiaController {
     public ResponseEntity<?> modificarDia(@PathVariable("cod") Long  codDia,
                                                 @RequestBody String nombreDia) {
         try {
-            Dia dia = diaService.modificarDia(codDia, nombreDia);
+            DiaDTO dia = diaService.modificarDia(codDia, nombreDia);
             return ResponseEntity.ok(dia);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -51,7 +51,7 @@ public class DiaController {
     @PutMapping("/{cod}/baja")
     public ResponseEntity<?> bajaDia(@PathVariable("cod") Long codDia) {
         try {
-            Dia diaBaja = diaService.bajaDia(codDia);
+            DiaDTO diaBaja = diaService.bajaDia(codDia);
             return ResponseEntity.ok(diaBaja);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -63,7 +63,7 @@ public class DiaController {
     public ResponseEntity<?> getDias() {
         try {
             // Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
-            List<Dia> dias = diaService.getDias();
+            List<DiaDTO> dias = diaService.getDias();
             return ResponseEntity.status(HttpStatus.CREATED).body(dias);
 
         } catch (Exception e) {

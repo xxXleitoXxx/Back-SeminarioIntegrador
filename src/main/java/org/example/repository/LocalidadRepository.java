@@ -10,7 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface LocalidadRepository extends JpaRepository<Localidad,Long> {
-    Optional<Localidad> findByCodLocalidadAndFechaBajaLocalidad(Long codLocalidad,Date fechaBajaLocalidad);
+    Optional<Localidad> findByCodLocalidadAndFechaBajaLocalidadIsNull(Long codLocalidad);
+    Optional<Localidad> findByNombreLocalidadAndFechaBajaLocalidadIsNull(String nombreLocalidad);
 }
 
 

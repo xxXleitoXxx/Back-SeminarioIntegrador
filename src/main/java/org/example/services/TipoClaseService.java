@@ -122,6 +122,7 @@ public class TipoClaseService {
         if (!horarioiDiaxTipoClaseRepository.findByTipoClaseAndFechaBajaHFxTCIsNull(tipoClase).isEmpty()){
             throw new IllegalArgumentException("No se puede dar de baja si hay horarios activos asociados a esa clase.");
         }
+        //verificar que no haya un profesor asociado a ese tipo de clase
 
         tipoClase.setFechaBajaTipoClase(fechaBaja);
         tipoClaseRepository.save(tipoClase);

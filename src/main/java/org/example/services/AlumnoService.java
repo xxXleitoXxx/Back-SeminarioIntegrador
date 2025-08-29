@@ -23,7 +23,7 @@ public class AlumnoService {
     @Autowired
     AlumnoRepository alumnoRepository;
     @Autowired
-    private LocalidadService localidadService;
+    private LocalidadRepository localidadRepository;
     @Autowired
     private FichaMedicaServices FichaMedicaService;
     @Autowired
@@ -46,7 +46,7 @@ public class AlumnoService {
 
 
         //comprobamos que la localidad no sea nula
-        Localidad localidad = localidadService.buscarLocalidadPorCodigoYFechaBaja(nuevoAlumno.getLocalidadAlumno().getCodLocalidad());
+        Localidad localidad = localidadRepository.findByCodLocalidadAndFechaBajaLocalidadIsNull(nuevoAlumno.getLocalidadAlumno().getCodLocalidad()).orElseThrow();
         alumno.setLocalidadAlumno(localidad); // Asignamos la localidad al Alumno
 
 // Quitamos la comprobacion porque no hace falta cargarlas de inmediato
@@ -92,7 +92,7 @@ public class AlumnoService {
             alumno.setDomicilioAlumno(alumnoDto.getDomicilioAlumno());
 
             // Actualizamos la localidad del Alumno
-            Localidad localidad = localidadService.buscarLocalidadPorCodigoYFechaBaja(alumnoDto.getLocalidadAlumno().getCodLocalidad());
+            Localidad localidad = localidadRepository.findByCodLocalidadAndFechaBajaLocalidadIsNull(alumnoDto.getLocalidadAlumno().getCodLocalidad()).orElseThrow();
             alumno.setLocalidadAlumno(localidad);
             List<ContactoEmergenciaDTO> contactoDTO = alumnoDto.getContactosEmergencia();
             // Comprobamos que la lista de contactos de emergencia no sea nula o vacía

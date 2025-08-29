@@ -20,6 +20,8 @@ public class InscripcionService {
     AlumnoRepository alumnoRepository;
     @Autowired
     TipoClaseRepository tipoClaseRepository;
+    @Autowired
+    ClaseAlumnoService claseAlumnoService;
     public InscripcionDTO inscribirAlumno(int dniAlumno, Long codTipoClase) {
         // Buscar alumno y validar que no esté dado de baja
         Alumno alumno = alumnoRepository.findByDniAlumno(dniAlumno)
@@ -57,6 +59,7 @@ public class InscripcionService {
         InscripcionDTO inscripcionDTO = new InscripcionDTO();
         inscripcionDTO.setAlumnoDto(alumnoDto);
         inscripcionDTO.setTipoClaseDTO(tipoClaseDTO);
+        claseAlumnoService.generarUnClaseAlumno(tipoClase,alumno);
         return inscripcionDTO;
 
     }

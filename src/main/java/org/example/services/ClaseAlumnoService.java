@@ -1,9 +1,6 @@
 package org.example.services;
 
-import org.example.entity.Clase;
-import org.example.entity.ClaseAlumno;
-import org.example.entity.Inscripcion;
-import org.example.entity.TipoClase;
+import org.example.entity.*;
 import org.example.repository.ClaseAlumnoRepository;
 import org.example.repository.ClaseRepository;
 import org.example.repository.InscripcionRepository;
@@ -34,5 +31,16 @@ public class ClaseAlumnoService {
 
         }
 
+    }
+    public void generarUnClaseAlumno(TipoClase tipoClase, Alumno alumno){
+
+            List<Clase> clases = claseRepository.findByTipoClaseAndFechaBajaClaseIsNull(tipoClase);
+            for (Clase clase : clases) {
+                ClaseAlumno claseAlumno = new ClaseAlumno();
+                claseAlumno.setClase(clase);
+                claseAlumno.setAlumno(alumno);
+                claseAlumnoRepository.save(claseAlumno);
+
+            }
     }
 }

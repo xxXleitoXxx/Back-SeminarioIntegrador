@@ -30,7 +30,18 @@ public class RangoEtarioService {
         existeRangoEtario(nuevorangoetario.getCodRangoEtario());
 
         //verificar que no haya un rango etario existente con esos rangos
-        existeRango(nuevorangoetario.getEdadDesde(), nuevorangoetario.getEdadHasta());
+//        existeRango(nuevorangoetario.getEdadDesde(), nuevorangoetario.getEdadHasta());
+
+        //verificar que edad desde sea menor a edad hasta
+        if (nuevorangoetario.getEdadDesde() >= nuevorangoetario.getEdadHasta()){
+            throw new IllegalArgumentException("La edad desde debe ser menor a la edad hasta");
+        }
+        //verificar que no exista un rango etario con ese nombre
+        rangoEtarioRepository.findByNombreRangoEtarioAndFechaBajaRangoEtarioIsNull(nuevorangoetario.getNombreRangoEtario())
+                .ifPresent(rango -> {
+                    throw new IllegalArgumentException("Ya existe un rango etario con ese nombre.");
+                });
+
 
         RangoEtario rangoetario= new RangoEtario();
         rangoetario.setCodRangoEtario(nuevorangoetario.getCodRangoEtario());
@@ -72,8 +83,17 @@ public class RangoEtarioService {
             throw new IllegalStateException("No se puede modificar un rango etario dado de baja");
         }
 
-        //verificar que no haya un rango etario existente con esos rangos
-        existeRango(rangoEtarioDTO.getEdadDesde(), rangoEtarioDTO.getEdadHasta());
+        //verificar que no este relacionado con un tipo de clase
+        if (!tipoClaseRepository.findByRangoEtario(rangoEtario).isEmpty()){
+            throw new IllegalStateException("No se puede modificar un rango etario asociado a un tipo de clase activo");
+        }
+        //verificar que edad desde sea menor a edad hasta
+        if (rangoEtarioDTO.getEdadDesde() >= rangoEtarioDTO.getEdadHasta()){
+            throw new IllegalArgumentException("La edad desde debe ser menor a la edad hasta");
+        }
+
+//        //verificar que no haya un rango etario existente con esos rangos
+//        existeRango(rangoEtarioDTO.getEdadDesde(), rangoEtarioDTO.getEdadHasta());
         rangoEtario.setNombreRangoEtario(rangoEtario.getNombreRangoEtario());
         rangoEtario.setEdadHasta(rangoEtarioDTO.getEdadHasta());
         rangoEtario.setEdadDesde(rangoEtarioDTO.getEdadDesde());
@@ -87,6 +107,7 @@ public class RangoEtarioService {
         if (rangoEtario.getFechaBajaRangoEtario() != null){
             throw new IllegalStateException("No se puede dar de baja un rango etario dado de baja");
         }
+        //verificar que no este relacionado con un tipo de clase
         if (!tipoClaseRepository.findByRangoEtario(rangoEtario).isEmpty()){;
             throw new IllegalStateException("No se puede dar de baja un rango etario asociado a un tipo de clase activo");
         }

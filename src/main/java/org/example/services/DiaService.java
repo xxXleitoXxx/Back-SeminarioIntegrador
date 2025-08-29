@@ -15,7 +15,7 @@ public class DiaService {
     @Autowired
     DiaRepository  diaRepository;
 
-    public Dia crearDia(DiaDTO diaDTO){
+    public DiaDTO crearDia(DiaDTO diaDTO){
         diaRepository.findByNombreDiaAndFechaBajaDiaIsNull(diaDTO.getNombreDia())
                 .ifPresent(dia -> {
                     if (diaDTO.getFechaBajaDia() == null){
@@ -26,10 +26,15 @@ public class DiaService {
         Dia dia = new Dia();
         dia.setNombreDia(diaDTO.getNombreDia());
         dia.setFechaBajaDia(diaDTO.getFechaBajaDia());
-        return diaRepository.save(dia);
+        diaRepository.save(dia);
+        DiaDTO  diaDTO1 = new DiaDTO();
+        diaDTO1.setCodDia(dia.getCodDia());
+        diaDTO1.setNombreDia(dia.getNombreDia());
+        diaDTO1.setFechaBajaDia(dia.getFechaBajaDia());
+        return diaDTO1;
     }
 
-    public Dia modificarDia(Long codDia,String nombreDia){
+    public DiaDTO modificarDia(Long codDia,String nombreDia){
 
 
         Dia dia = diaRepository.findByCodDia(codDia)
@@ -41,10 +46,15 @@ public class DiaService {
         }
 
         dia.setNombreDia(nombreDia);
-        return diaRepository.save(dia);
+        diaRepository.save(dia);
+        DiaDTO diaDTO = new DiaDTO();
+        diaDTO.setCodDia(dia.getCodDia());
+        diaDTO.setNombreDia(dia.getNombreDia());
+        diaDTO.setFechaBajaDia(dia.getFechaBajaDia());
+        return diaDTO;
     }
 
-    public Dia bajaDia(Long codDia){
+    public DiaDTO bajaDia(Long codDia){
         Dia dia = diaRepository.findByCodDia(codDia)
                 .orElseThrow(() -> new IllegalArgumentException("No existe un día con ese código."));
 
@@ -54,10 +64,27 @@ public class DiaService {
         }
 
         dia.setFechaBajaDia(new Date());
-        return diaRepository.save(dia);
+        diaRepository.save(dia);
+        DiaDTO diaDTO = new DiaDTO();
+        diaDTO.setCodDia(dia.getCodDia());
+        diaDTO.setNombreDia(dia.getNombreDia());
+        diaDTO.setFechaBajaDia(dia.getFechaBajaDia());
+        return diaDTO;
     }
-    public List<Dia> getDias() {
+    public List<DiaDTO> getDias() {
         List<Dia> dias = diaRepository.findAll();
-        return dias;
+        if (dias.isEmpty()) {
+            throw new IllegalArgumentException("No existen dias registrados");
+        }
+        List<DiaDTO>  diaDtos = new java.util.ArrayList<>();
+        for (Dia dia : dias) {
+            DiaDTO diaDTO = new DiaDTO();
+            diaDTO.setCodDia(dia.getCodDia());
+            diaDTO.setNombreDia(dia.getNombreDia());
+            diaDTO.setFechaBajaDia(dia.getFechaBajaDia());
+            diaDtos.add(diaDTO);
+        }
+        return diaDtos;
+
     }
 }

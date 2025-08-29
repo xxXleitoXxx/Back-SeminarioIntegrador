@@ -26,7 +26,7 @@ public class LocalidadController {
     public ResponseEntity<?>  crearLocalidad(@RequestBody LocalidadDto  localidadDto){
         try{
             //Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
-            Localidad localidad = localidadService.crearLocalidad(localidadDto);
+            LocalidadDto localidad = localidadService.crearLocalidad(localidadDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(localidad);
 
         }catch (Exception e){
@@ -39,7 +39,7 @@ public class LocalidadController {
     public ResponseEntity<?> modificarLocalidad(@PathVariable("cod") Long  codLocalidad,
                                                @RequestBody LocalidadDto localidadDto) {
         try {
-            Localidad localidad = localidadService.modificarLocalidad(codLocalidad, localidadDto);
+            LocalidadDto localidad = localidadService.modificarLocalidad(codLocalidad, localidadDto);
             return ResponseEntity.ok(localidad);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -51,7 +51,7 @@ public class LocalidadController {
     @PutMapping("/{cod}/baja")
     public ResponseEntity<?> bajaLocalidad(@PathVariable("cod") Long codLocalidad) {
         try {
-            Localidad localidadBaja = localidadService.bajaLocalidad(codLocalidad, new Date());
+            LocalidadDto localidadBaja = localidadService.bajaLocalidad(codLocalidad, new Date());
             return ResponseEntity.ok(localidadBaja);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -63,7 +63,7 @@ public class LocalidadController {
     public ResponseEntity<?> getLocalidades() {
         try{
             // Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
-            List<Localidad> localidades = localidadService.getLocalidades();
+            List<LocalidadDto> localidades = localidadService.getLocalidades();
             return ResponseEntity.status(HttpStatus.CREATED).body(localidades);
 
         }catch (Exception e){
