@@ -44,7 +44,7 @@ public class InscripcionProfesorController {
     @PutMapping("/{nro}")
     public ResponseEntity<?> bajaInscripcionProfesor(@PathVariable("nro") Long nroInscripcionProfesor) {
         try {
-            InscripcionProfesorDTO inscripcion = inscripcionProfesorService.bajaInscripcionProfesor(nroInscripcionProfesor);
+            String inscripcion = inscripcionProfesorService.bajaInscripcionProfesor(nroInscripcionProfesor);
             return ResponseEntity.ok(inscripcion);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

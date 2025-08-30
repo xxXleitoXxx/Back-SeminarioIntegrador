@@ -76,42 +76,15 @@ public class InscripcionProfesorService {
                 });
     }
 
-    public InscripcionProfesorDTO bajaInscripcionProfesor(Long nroInscripcionProfesor) {
-        InscripcionProfesor bajaInscripto = inscripcionProfesorRepository.findByNroInscripcionProfesor(nroInscripcionProfesor).orElseThrow(() -> new IllegalArgumentException("Inscripcion no encontrada"));
-        if (bajaInscripto.getFechaBajaInscripcionProfesor()  != null){
-            throw new IllegalArgumentException("Inscripcion y  dada de baja");
-        }
+    public String bajaInscripcionProfesor(Long nroInscripcionProfesor) {
+
+        InscripcionProfesor bajaInscripto = inscripcionProfesorRepository.findByNroInscripcionProfesorAndFechaBajaInscripcionProfesorIsNull(nroInscripcionProfesor).orElseThrow(() -> new IllegalArgumentException("Inscripcion no encontrada"));
 
         // Dar de baja la inscripción
-        bajaInscripto.setFechaInscripcionProfesor(new Date());
+        bajaInscripto.setFechaBajaInscripcionProfesor(new Date());
         inscripcionProfesorRepository.save(bajaInscripto);
 
-        // Convertir a DTO y retornar
-        InscripcionProfesorDTO inscripcionProfesorDTO = new InscripcionProfesorDTO();
-        inscripcionProfesorDTO.setNroInscripcionProfesor(bajaInscripto.getNroInscripcionProfesor());
-        ProfesorDto profesorDto = new ProfesorDto();
-        profesorDto.setNroProfesor(bajaInscripto.getProfesor().getNroProfesor());
-        profesorDto.setDniProfesor(bajaInscripto.getProfesor().getDniProfesor());
-        profesorDto.setNombreProfesor(bajaInscripto.getProfesor().getNombreProfesor());
-        profesorDto.setTelefonoProfesor(bajaInscripto.getProfesor().getTelefonoProfesor());
-        profesorDto.setFechaBajaProfesor(bajaInscripto.getProfesor().getFechaBajaProfesor());
-        profesorDto.setEmailProfesor(bajaInscripto.getProfesor().getEmailProfesor());
-        inscripcionProfesorDTO.setProfesor(profesorDto);
-        TipoClase tipoClase = bajaInscripto.getTipoClase();
-        TipoClaseDTO tipoClaseDTO = new TipoClaseDTO();
-        tipoClaseDTO.setCodTipoClase(tipoClase.getCodTipoClase());
-        tipoClaseDTO.setNombreTipoClase(tipoClase.getNombreTipoClase());
-        tipoClaseDTO.setCupoMaxTipoClase(tipoClase.getCupoMaxTipoClase());
-        tipoClaseDTO.setFechaBajaTipoClase(tipoClase.getFechaBajaTipoClase());
-        RangoEtarioDTO rangoEtarioDTO = new RangoEtarioDTO();
-        rangoEtarioDTO.setCodRangoEtario(tipoClase.getRangoEtario().getCodRangoEtario());
-        rangoEtarioDTO.setEdadDesde(tipoClase.getRangoEtario().getEdadDesde());
-        rangoEtarioDTO.setEdadHasta(tipoClase.getRangoEtario().getEdadHasta());
-        tipoClaseDTO.setRangoEtarioDTO(rangoEtarioDTO);
-        inscripcionProfesorDTO.setTipoClase(tipoClaseDTO);
-        inscripcionProfesorDTO.setFechaInscripcionProfesor(bajaInscripto.getFechaInscripcionProfesor());
-        inscripcionProfesorDTO.setFechaBajaInscripcionProfesor(bajaInscripto.getFechaBajaInscripcionProfesor());
-        return inscripcionProfesorDTO;
+        return "Inscripcion dada de baja correctamente";
     }
     public List<InscripcionProfesorDTO> getInscripcionesProfesores() {
         // Traer todas las inscripciones de profesores

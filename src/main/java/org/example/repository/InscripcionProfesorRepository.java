@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface InscripcionProfesorRepository extends JpaRepository<InscripcionProfesor,Long> {
     Optional<InscripcionProfesor> findByProfesorAndTipoClaseAndFechaBajaInscripcionProfesorIsNull(Profesor profesor, TipoClase tipoClase);
-    Optional<InscripcionProfesor> findByNroInscripcionProfesor(Long nroInscripcionProfesor);
+    Optional<InscripcionProfesor> findByNroInscripcionProfesorAndFechaBajaInscripcionProfesorIsNull(Long nroInscripcionProfesor);
     List<InscripcionProfesor> findByTipoClaseAndFechaBajaInscripcionProfesorIsNull(TipoClase tipoClase);
+    List<InscripcionProfesor> findByProfesorAndFechaBajaInscripcionProfesorIsNull(Profesor profesor);
 }

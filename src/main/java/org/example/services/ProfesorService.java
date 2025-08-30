@@ -2,6 +2,7 @@ package org.example.services;
 
 import org.example.dto.ProfesorDto;
 import org.example.entity.Profesor;
+import org.example.repository.InscripcionProfesorRepository;
 import org.example.repository.ProfesorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ import java.util.List;
 public class ProfesorService {
     @Autowired
     ProfesorRepository profesorRepository;
+    @Autowired
+    InscripcionProfesorRepository inscripcionProfesorRepository;
 
     //metodo para crear un nuevo profesor
     public ProfesorDto crearProfesor(ProfesorDto nuevoprofe){
@@ -116,6 +119,12 @@ public class ProfesorService {
         if (profesorexistente.getFechaBajaProfesor() != null) {
             throw new RuntimeException("El profesor ya esta dado de baja");
         }
+
+        //Validar que no este relacionado a una inscripcion activa
+        if (!inscripcionProfesorRepository.findByProfesorAndFechaBajaInscripcionProfesorIsNull(profesorexistente).isEmpty()){
+            throw new IllegalStateException("No se puede dar de baja el profesor porque tiene inscripciones activas");
+        }
+
         //Actualizar datos
         profesorexistente.setFechaBajaProfesor(fechaBaja);
         profesorRepository.save(profesorexistente);
