@@ -12,6 +12,6 @@ import java.util.Optional;
 @Repository
 public interface TipoClaseRepository extends JpaRepository<TipoClase,Long> {
     Optional<TipoClase> findBycodTipoClase(Long codTipoClase);
-    List<TipoClase> findByRangoEtario(RangoEtario rangoEtario);
+    List<TipoClase> findByRangoEtarioAndFechaBajaTipoClaseIsNull(RangoEtario rangoEtario);
     Optional<TipoClase> findByNombreTipoClaseAndFechaBajaTipoClaseIsNull(String nombreTipoClase);
 }

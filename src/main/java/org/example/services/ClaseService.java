@@ -1,11 +1,9 @@
 package org.example.services;
 
-import org.example.entity.Clase;
-import org.example.entity.ConfHorarioTipoClase;
-import org.example.entity.HorarioiDiaxTipoClase;
-import org.example.entity.Profesor;
+import org.example.entity.*;
 import org.example.repository.ClaseRepository;
 import org.example.repository.ConfHorarioTipoClaseRepository;
+import org.example.repository.InscripcionProfesorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +25,8 @@ public class ClaseService {
     ConfHorarioTipoClaseRepository confHorarioTipoClaseRepository;
     @Autowired
     ClaseAlumnoService claseAlumnoService;
+    @Autowired
+    InscripcionProfesorRepository inscripcionProfesorRepository;
 
     public void generarclases() {
         // Buscar configuración activa
@@ -34,10 +34,13 @@ public class ClaseService {
                 .findByFechaFinVigenciaConfIsNull()
                 .orElseThrow(() -> new IllegalArgumentException("No hay una configuración activa de horarios"));
 
+        // Verificar si la fecha de vigencia es hoy
         LocalDate hoy = LocalDate.now();
         LocalDate vigencia = confActual.getFechaVigenciaConf().toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
+
+        // Si la vigencia es hoy, generar las clases y dar de baja las futuras
         boolean seEjecuto = false;
         if (hoy.equals(vigencia)) {
 
@@ -56,8 +59,7 @@ public class ClaseService {
                 clase.setDiaClase(horarios.getDia());
                 clase.setFechaHoraClase(fechaClase);
                 clase.setTipoClase(horarios.getTipoClase());
-
-                List<Profesor> profesores = new ArrayList<>(horarios.getTipoClase().getProfesores());
+                List<Profesor> profesores = new ArrayList<>(claseProfesores(horarios.getTipoClase()));
                 clase.setProfesores(profesores);
 
                 claseRepository.save(clase);
@@ -74,7 +76,7 @@ public class ClaseService {
                 claseRepository.findByFechaBajaClaseIsNullAndFechaHoraClase(
                         proximaFecha(hoy.plusDays(1).getDayOfWeek())
                 );
-
+        // Si no se ejecutó hoy, verificar si hay clases para hoy o mañana
         if (seEjecuto == false){
             if (clasesHoy.isEmpty() || clasesMañana.isEmpty()) {
                 for (HorarioiDiaxTipoClase horarios : confActual.getHorarioiDiaxTipoClaseList()) {
@@ -85,8 +87,7 @@ public class ClaseService {
                     clase.setDiaClase(horarios.getDia());
                     clase.setFechaHoraClase(fechaClase);
                     clase.setTipoClase(horarios.getTipoClase());
-
-                    List<Profesor> profesores = new ArrayList<>(horarios.getTipoClase().getProfesores());
+                    List<Profesor> profesores = new ArrayList<>(claseProfesores(horarios.getTipoClase()));
                     clase.setProfesores(profesores);
 
                     claseRepository.save(clase);
@@ -122,6 +123,15 @@ public class ClaseService {
             case "DOMINGO" -> DayOfWeek.SUNDAY;
             default -> throw new IllegalArgumentException("Día inválido: " + diaSemana);
         };
+    }
+
+    private List<Profesor> claseProfesores(TipoClase tipoClase){
+        List<InscripcionProfesor> inscripciones = inscripcionProfesorRepository.findByTipoClaseAndFechaBajaInscripcionProfesorIsNull(tipoClase);
+        List<Profesor> profesores = new ArrayList<>();
+        for (InscripcionProfesor inscripcion : inscripciones) {
+            profesores.add(inscripcion.getProfesor());
+        }
+        return profesores;
     }
 
 

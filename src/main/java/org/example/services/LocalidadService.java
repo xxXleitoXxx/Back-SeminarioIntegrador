@@ -28,11 +28,13 @@ public class LocalidadService {
                     throw new IllegalArgumentException("Ya existe una localidad con ese nombre.");
                 });
 
+        //crear localidad
         Localidad localidad = new Localidad();
         localidad.setNombreLocalidad(localidadDto.getNombreLocalidad());
         localidad.setFechaBajaLocalidad(localidadDto.getFechaBajaLocalidad());
         localidadRepository.save(localidad);
 
+        //crear dto para devolver
         LocalidadDto localidadDTO = new LocalidadDto();
         localidadDTO.setCodLocalidad(localidad.getCodLocalidad());
         localidadDTO.setNombreLocalidad(localidad.getNombreLocalidad());
@@ -51,8 +53,11 @@ public class LocalidadService {
                     throw new IllegalArgumentException("Ya existe una localidad con ese nombre.");
                 });
 
+        //modificar
         localidadexistente.setNombreLocalidad(localidadDto.getNombreLocalidad());
         localidadRepository.save(localidadexistente);
+
+        //crear dto para devolver
         LocalidadDto  localidadDTO = new LocalidadDto();
         localidadDTO.setCodLocalidad(localidadexistente.getCodLocalidad());
         localidadDTO.setNombreLocalidad(localidadexistente.getNombreLocalidad());
@@ -75,6 +80,7 @@ public class LocalidadService {
         localidadexistente.setFechaBajaLocalidad(fechaBajaLoc);
         localidadRepository.save(localidadexistente);
 
+        //crear dto para devolver
         LocalidadDto localidadDTO = new LocalidadDto();
         localidadDTO.setCodLocalidad(localidadexistente.getCodLocalidad());
         localidadDTO.setNombreLocalidad(localidadexistente.getNombreLocalidad());
@@ -85,10 +91,15 @@ public class LocalidadService {
 
     //traer todas las localidades
     public List<LocalidadDto> getLocalidades() {
+        //traer todas las localidades
         List<Localidad> localidades = localidadRepository.findAll();
+
+        //verificar que haya localidades
         if (localidades.isEmpty()) {
             throw new NoSuchElementException("No hay localidades registradas.");
         }
+
+        //convertir a dto
         List<LocalidadDto> localidadDtos  = new ArrayList<>();
         for (Localidad localidad : localidades) {
             LocalidadDto localidadDTO = new LocalidadDto();

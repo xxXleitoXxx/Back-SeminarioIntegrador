@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface ProfesorRepository extends JpaRepository<Profesor,Long> {
 
     Optional<Profesor> findByNroProfesor(Long dniProfesor);
-    List<Profesor> findByDniProfesorAndFechaBajaProfesorIsNull(int dniProfesor);
+    Optional<Profesor> findByDniProfesorAndFechaBajaProfesorIsNull(int dniProfesor);
 
 }

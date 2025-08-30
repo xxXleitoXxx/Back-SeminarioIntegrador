@@ -82,6 +82,7 @@ public class AlumnoService {
         Optional<Alumno> alumnoOptional = alumnoRepository.findById(alumnoDto.getNroAlumno());
         if (alumnoOptional.isPresent()) {
             Alumno alumno = alumnoOptional.get();
+
             // Actualizamos los campos del Alumno
             alumno.setNombreAlumno(alumnoDto.getNombreAlumno());
             alumno.setApellidoAlumno(alumnoDto.getApellidoAlumno());
@@ -95,10 +96,12 @@ public class AlumnoService {
             Localidad localidad = localidadRepository.findByCodLocalidadAndFechaBajaLocalidadIsNull(alumnoDto.getLocalidadAlumno().getCodLocalidad()).orElseThrow();
             alumno.setLocalidadAlumno(localidad);
             List<ContactoEmergenciaDTO> contactoDTO = alumnoDto.getContactosEmergencia();
+
             // Comprobamos que la lista de contactos de emergencia no sea nula o vacía
             if (contactoDTO == null || contactoDTO.isEmpty()) {
                 throw new IllegalArgumentException("Debe agregar al menos un contacto de emergencia");
             }
+
             // Actualizamos los contactos de emergencia del Alumno
             List<ContactoEmergencia> contactosEmergencia = new ArrayList<>();
             for (ContactoEmergenciaDTO contacto : contactoDTO) {

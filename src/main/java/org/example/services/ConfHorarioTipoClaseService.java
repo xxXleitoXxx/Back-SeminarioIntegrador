@@ -23,6 +23,7 @@ public class ConfHorarioTipoClaseService {
 
 
     public ConfHorarioTipoClaseDTO crearConfHorarioTipoClase(ConfHorarioTipoClaseDTO confHorarioTipoClaseDTO) {
+        // Validar que no haya solapamientos entre los horarios
         if (haySolapamientoHorarios(confHorarioTipoClaseDTO.getHorarioiDiaxTipoClaseList())) {
             throw new IllegalArgumentException("Hay solapamiento entre los horarios ingresados.");
         }
@@ -32,6 +33,7 @@ public class ConfHorarioTipoClaseService {
                 .findByFechaFinVigenciaConfIsNull()
                 .orElse(null);
 
+        // Dar de baja los horarios asociados a la config vigente
         if (confActual != null) {
             for (HorarioiDiaxTipoClase horarioiDiaxTipoClase : confActual.getHorarioiDiaxTipoClaseList()) {
                 horarioiDiaxTipoClaseService.bajaHorario(horarioiDiaxTipoClase.getNroHFxTC());
@@ -82,6 +84,7 @@ public class ConfHorarioTipoClaseService {
         }
         nuevaConfDTO.setHorarioiDiaxTipoClaseList(horarioDTOs);
 
+        // Generar clases para la nueva configuración
         claseService.generarclases();
         return nuevaConfDTO;
     }
@@ -111,7 +114,10 @@ public class ConfHorarioTipoClaseService {
     }
 
     public List<ConfHorarioTipoClaseDTO> getConfHorarioTipoClase() {
+        //traer todas las configuraciones
         List<ConfHorarioTipoClaseDTO> configList = new ArrayList<>();
+
+        //convertir a dto
         for (ConfHorarioTipoClase configsDTO :confHorarioTipoClaseRepository.findAll()){
             ConfHorarioTipoClaseDTO nuevaConfDTO = new ConfHorarioTipoClaseDTO();
             nuevaConfDTO.setNroConfTC(configsDTO.getNroConfTC());

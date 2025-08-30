@@ -19,9 +19,11 @@ public class ClaseAlumnoService {
     InscripcionRepository inscripcionRepository;
 
     public void generarClaseAlumno(Long nroClase){
-
+        //busco la clase
         Clase clase = claseRepository.findByNroClaseAndFechaBajaClaseIsNull(nroClase).orElseThrow(() -> new IllegalArgumentException("No existe una clase con el numero " + nroClase));
         TipoClase tipoClase = clase.getTipoClase();
+
+        //busco las inscripciones activas del tipo de clase
         List<Inscripcion>  inscripcions = inscripcionRepository.findByTipoClaseAndFechaBajaInscripcionIsNull(tipoClase);
         for (Inscripcion inscripcion : inscripcions) {
             ClaseAlumno claseAlumno = new ClaseAlumno();
@@ -33,8 +35,9 @@ public class ClaseAlumnoService {
 
     }
     public void generarUnClaseAlumno(TipoClase tipoClase, Alumno alumno){
-
+            //busco las clases activas del tipo de clase
             List<Clase> clases = claseRepository.findByTipoClaseAndFechaBajaClaseIsNull(tipoClase);
+            //crear una clase alumno por cada clase activa
             for (Clase clase : clases) {
                 ClaseAlumno claseAlumno = new ClaseAlumno();
                 claseAlumno.setClase(clase);

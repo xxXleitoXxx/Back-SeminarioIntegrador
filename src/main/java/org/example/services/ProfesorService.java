@@ -29,19 +29,24 @@ public class ProfesorService {
             throw new IllegalArgumentException("Ya existe un profesor con ese dni.");
         }
 
+        //creamos el profesor
         Profesor profesor= new Profesor();
         profesor.setNroProfesor(nuevoprofe.getNroProfesor());
         profesor.setDniProfesor(nuevoprofe.getDniProfesor());
         profesor.setNombreProfesor(nuevoprofe.getNombreProfesor());
         profesor.setTelefonoProfesor(nuevoprofe.getTelefonoProfesor());
         profesor.setFechaBajaProfesor(nuevoprofe.getFechaBajaProfesor());
+        profesor.setEmailProfesor(nuevoprofe.getEmailProfesor());
         profesorRepository.save(profesor);
+
+        //creamos el dto para devolver
         ProfesorDto  profesorDTO = new ProfesorDto();
         profesorDTO.setNroProfesor(profesor.getNroProfesor());
         profesorDTO.setDniProfesor(profesor.getDniProfesor());
         profesorDTO.setNombreProfesor(profesor.getNombreProfesor());
         profesorDTO.setTelefonoProfesor(profesor.getTelefonoProfesor());
         profesorDTO.setFechaBajaProfesor(profesor.getFechaBajaProfesor());
+        profesorDTO.setEmailProfesor(profesor.getEmailProfesor());
         return profesorDTO;
 
     }
@@ -55,33 +60,41 @@ public class ProfesorService {
         if (profesorexistente.getFechaBajaProfesor() != null) {
             throw new IllegalStateException("No se puede modificar un profesor dado de baja");
         }
-        //validamos que no exista el profesor en la base de datos por su dni
-        if (!profesorRepository.findByDniProfesorAndFechaBajaProfesorIsNull(profeactualizado.getDniProfesor()).isEmpty()){
-            throw new IllegalArgumentException("Ya existe un profesor con ese dni.");
-        }
+//        //validamos que no exista el profesor en la base de datos por su dni
+//        if (!profesorRepository.findByDniProfesorAndFechaBajaProfesorIsNull(profeactualizado.getDniProfesor()).isEmpty()){
+//            throw new IllegalArgumentException("Ya existe un profesor con ese dni.");
+//        }
 
         // Actualizar datos permitidos
         profesorexistente.setTelefonoProfesor(profeactualizado.getTelefonoProfesor());
         profesorexistente.setNombreProfesor(profeactualizado.getNombreProfesor());
         profesorexistente.setDniProfesor(profeactualizado.getDniProfesor());
+        profesorexistente.setEmailProfesor(profeactualizado.getEmailProfesor());
         profesorRepository.save(profesorexistente);
+
+        // Crear y devolver el DTO actualizado
         ProfesorDto profesorDTO = new ProfesorDto();
         profesorDTO.setNroProfesor(profesorexistente.getNroProfesor());
         profesorDTO.setDniProfesor(profesorexistente.getDniProfesor());
         profesorDTO.setNombreProfesor(profesorexistente.getNombreProfesor());
         profesorDTO.setTelefonoProfesor(profesorexistente.getTelefonoProfesor());
         profesorDTO.setFechaBajaProfesor(profesorexistente.getFechaBajaProfesor());
+        profesorDTO.setEmailProfesor(profesorexistente.getEmailProfesor());
         return profesorDTO;
     }
 
 
     //Traer todos los profesores
     public List<ProfesorDto> getProfesores() {
-
+        // Traer todos los profesores
         List<Profesor> profesores = profesorRepository.findAll();
+
+        // Verificar que no esté vacío
         if (profesores.isEmpty()) {
             throw new IllegalArgumentException("No existen profesores registrados");
         }
+
+        // Convertir a DTO
         List<ProfesorDto> profesorDtos = new ArrayList<>();
         for (Profesor profesor : profesores) {
             ProfesorDto profesorDTO = new ProfesorDto();
@@ -90,6 +103,7 @@ public class ProfesorService {
             profesorDTO.setNombreProfesor(profesor.getNombreProfesor());
             profesorDTO.setTelefonoProfesor(profesor.getTelefonoProfesor());
             profesorDTO.setFechaBajaProfesor(profesor.getFechaBajaProfesor());
+            profesorDTO.setEmailProfesor(profesor.getEmailProfesor());
             profesorDtos.add(profesorDTO);
         }
         return profesorDtos;
@@ -111,6 +125,7 @@ public class ProfesorService {
         profesorDTO.setNombreProfesor(profesorexistente.getNombreProfesor());
         profesorDTO.setTelefonoProfesor(profesorexistente.getTelefonoProfesor());
         profesorDTO.setFechaBajaProfesor(profesorexistente.getFechaBajaProfesor());
+        profesorDTO.setEmailProfesor(profesorexistente.getEmailProfesor());
         return profesorDTO;
 
     }

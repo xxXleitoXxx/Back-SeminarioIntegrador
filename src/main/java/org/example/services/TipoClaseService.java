@@ -6,10 +6,7 @@ import org.example.dto.TipoClaseDTO;
 import org.example.entity.Profesor;
 import org.example.entity.RangoEtario;
 import org.example.entity.TipoClase;
-import org.example.repository.HorarioiDiaxTipoClaseRepository;
-import org.example.repository.InscripcionRepository;
-import org.example.repository.RangoEtarioRepository;
-import org.example.repository.TipoClaseRepository;
+import org.example.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +24,8 @@ public class TipoClaseService {
     InscripcionRepository  inscripcionRepository;
     @Autowired
     HorarioiDiaxTipoClaseRepository horarioiDiaxTipoClaseRepository;
+    @Autowired
+    InscripcionProfesorRepository inscripcionProfesorRepository;
     //metodo crear tipo clase
     public TipoClaseDTO crearTipoClase(TipoClaseDTO nuevoTipoClase){
         //metodo que verifica si ya existe el tipoclase
@@ -39,9 +38,7 @@ public class TipoClaseService {
                 });
 
         //verificar que el cupo maximo sea mayor a 0
-        if (nuevoTipoClase.getCupoMaxTipoClase() <= 0){
-            throw new IllegalArgumentException("El cupo máximo debe ser mayor a 0.");
-        }
+        verificarCupoMaximo(nuevoTipoClase);
 
 
         TipoClase tipoClase = new TipoClase();
@@ -54,6 +51,14 @@ public class TipoClaseService {
 
         return nuevoTipoClase;
     }
+
+    public void verificarCupoMaximo(TipoClaseDTO tipoClaseDTO) {
+        if (tipoClaseDTO.getCupoMaxTipoClase() <= 0) {
+            throw new IllegalArgumentException("El cupo máximo debe ser mayor a 0.");
+        }
+    }
+
+    //metodo que verifica si ya existe el tipoclase
     public void validarTipoClaseNoExistente(Long codTipoClase) {
         tipoClaseRepository.findBycodTipoClase(codTipoClase)
                 .ifPresent(tc -> {
@@ -79,9 +84,7 @@ public class TipoClaseService {
                     }
                 });
         //verificar que el cupo maximo sea mayor a 0
-        if (tipoClaseDTO.getCupoMaxTipoClase() <= 0){
-            throw new IllegalArgumentException("El cupo máximo debe ser mayor a 0.");
-        }
+        verificarCupoMaximo(tipoClaseDTO);
         //verificar que el cupo maximo no sea menor al cupo actual si es que hay inscripciones
 
         if (tipoClaseDTO.getCupoMaxTipoClase() < tipoClase.getCupoMaxTipoClase()){
@@ -114,7 +117,7 @@ public class TipoClaseService {
         if (tipoClase.getFechaBajaTipoClase() != null){
             throw new IllegalArgumentException("El tipoclase ya está dado de baja.");
         }
-        //verificar que no haya nadie inscripto en esa clase si se quiere modifcar el cupo maximo y el rango etario
+        //verificar que no haya nadie inscripto en esa clase
         if (!inscripcionRepository.findByTipoClaseAndFechaBajaInscripcionIsNull(tipoClase).isEmpty()){
             throw new IllegalArgumentException("No se puede dar de baja si hay inscripciones activas en esa clase.");
         }
@@ -123,7 +126,10 @@ public class TipoClaseService {
             throw new IllegalArgumentException("No se puede dar de baja si hay horarios activos asociados a esa clase.");
         }
         //verificar que no haya un profesor asociado a ese tipo de clase
-
+        if (!inscripcionProfesorRepository.findByTipoClaseAndFechaBajaInscripcionProfesorIsNull(tipoClase).isEmpty()){
+            throw new IllegalArgumentException("No se puede dar de baja si hay profesores asociados a esa clase.");
+        }
+        //dar de baja
         tipoClase.setFechaBajaTipoClase(fechaBaja);
         tipoClaseRepository.save(tipoClase);
         TipoClaseDTO  tipoClaseDTO1 = new TipoClaseDTO();
@@ -137,11 +143,13 @@ public class TipoClaseService {
 
     //traer todos los tipoclase
     public List<TipoClaseDTO> getTipoClases() {
-
+        //traer todos los tipoclase
         List<TipoClase> tipoClases = tipoClaseRepository.findAll();
+        //verificar que no este vacio
         if (tipoClases.isEmpty()) {
             throw new IllegalArgumentException("No existen tipo clases registrados");
         }
+        //convertir a dto
         List<TipoClaseDTO>  tipoClaseDTOS  = new ArrayList<>();
         for (TipoClase tipoClase : tipoClases) {
             TipoClaseDTO tipoClaseDTO = new TipoClaseDTO();

@@ -50,6 +50,8 @@ public class InscripcionService {
         inscripcion.setAlumno(alumno);
         inscripcion.setTipoClase(tipoClase);
         inscripcionRepository.save(inscripcion);
+
+        // Crear y devolver DTO
         AlumnoDto alumnoDto = new AlumnoDto();
         alumnoDto.setNombreAlumno(alumno.getNombreAlumno());
         alumnoDto.setDniAlumno(alumno.getDniAlumno());
@@ -59,6 +61,7 @@ public class InscripcionService {
         InscripcionDTO inscripcionDTO = new InscripcionDTO();
         inscripcionDTO.setAlumnoDto(alumnoDto);
         inscripcionDTO.setTipoClaseDTO(tipoClaseDTO);
+        // Generar la claseAlumno asociada
         claseAlumnoService.generarUnClaseAlumno(tipoClase,alumno);
         return inscripcionDTO;
 
@@ -120,19 +123,27 @@ public class InscripcionService {
 
 
     public String bajaInscripcion(Long nroInscripcion){
+        // Buscar inscripción y validar que no esté ya dada de baja
         Inscripcion bajaInscripto = inscripcionRepository.findByNroInscripcion(nroInscripcion).orElseThrow(() -> new IllegalArgumentException("Inscripcion no encontrada"));
         if (bajaInscripto.getFechaBajaInscripcion()  != null){
             throw new IllegalArgumentException("Inscripcion y  dada de baja");
         }
-
+        // Dar de baja inscripción
         bajaInscripto.setFechaBajaInscripcion(new Date());
         inscripcionRepository.save(bajaInscripto);
         return "Inscripcion dada de baja correctamente.";
     }
 
     public List<InscripcionDTO> getInscripciones() {
-
+        // Traer todas las inscripciones
         List<Inscripcion> inscripciones = inscripcionRepository.findAll();
+
+        // Verificar que haya inscripciones
+        if (inscripciones.isEmpty()) {
+            throw new NoSuchElementException("No hay inscripciones registradas.");
+        }
+
+        // Convertir a DTO
         List<InscripcionDTO> inscripcionesDTO = new ArrayList<>();
         for (Inscripcion inscripcion : inscripciones) {
             InscripcionDTO inscripcionDTO = new InscripcionDTO();

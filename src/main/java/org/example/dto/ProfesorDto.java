@@ -15,7 +15,7 @@ public class ProfesorDto {
     private String nombreProfesor;
     private int telefonoProfesor;
     private Date fechaBajaProfesor;
-    private List<TipoClaseDTO> tipoClaseDTO;
+    private String emailProfesor;
 
 }
 

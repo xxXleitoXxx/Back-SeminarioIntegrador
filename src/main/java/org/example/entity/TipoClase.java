@@ -26,13 +26,5 @@ public class TipoClase {
     @ManyToOne
     @JoinColumn(name = "rangoetario_id", nullable = false)
     private RangoEtario rangoEtario;
-@ManyToMany
-    @JoinTable(
-            name = "profesor_tipoclase",
-            joinColumns = @JoinColumn(name = "cod_tipoclase"),
-            inverseJoinColumns = @JoinColumn(name = "nro_profesor")
-    )
-    private List<Profesor> profesores = new ArrayList<>();
 
-    // Otros atributos y métodos según sea necesario
 }

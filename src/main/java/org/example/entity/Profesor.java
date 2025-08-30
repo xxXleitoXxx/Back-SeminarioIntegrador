@@ -25,7 +25,7 @@ public class Profesor {
     private String nombreProfesor;
     private int telefonoProfesor;
     private Date fechaBajaProfesor;
-    @ManyToMany(mappedBy = "profesores")
-    private List<TipoClase> tipoClase = new ArrayList<>();
+    private String emailProfesor;
+
 
 }
