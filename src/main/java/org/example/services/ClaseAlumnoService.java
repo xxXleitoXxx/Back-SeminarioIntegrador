@@ -1,5 +1,7 @@
 package org.example.services;
 
+import org.example.dto.AlumnoDto;
+import org.example.dto.ClaseAlumnoDTO;
 import org.example.entity.*;
 import org.example.repository.ClaseAlumnoRepository;
 import org.example.repository.ClaseRepository;
@@ -7,7 +9,9 @@ import org.example.repository.InscripcionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClaseAlumnoService {
@@ -46,4 +50,36 @@ public class ClaseAlumnoService {
 
             }
     }
+    public List<ClaseAlumnoDTO> getAsistenciaClaseAlumno(Long nroClase){
+        Optional<Clase> clase = claseRepository.findById(nroClase);
+        AlumnoDto alumnoDto=new AlumnoDto();
+        List<ClaseAlumnoDTO> claseAlumnoDTOList=new ArrayList<>();
+
+        for(ClaseAlumno claseAlumno : claseAlumnoRepository.findByClase(clase)){
+            ClaseAlumnoDTO claseAlumnoDTO=new ClaseAlumnoDTO();
+            claseAlumnoDTO.setNroClaseAlumno(claseAlumno.getNroClaseAlumno());
+            claseAlumnoDTO.setPresenteClaseAlumno(claseAlumno.getPresenteClaseAlumno());
+
+            alumnoDto.setNroAlumno(claseAlumno.getAlumno().getNroAlumno());
+            alumnoDto.setNombreAlumno(claseAlumno.getAlumno().getNombreAlumno());
+            alumnoDto.setApellidoAlumno(claseAlumno.getAlumno().getApellidoAlumno());
+            alumnoDto.setDniAlumno(claseAlumno.getAlumno().getDniAlumno());
+
+            claseAlumnoDTO.setAlumnodto(alumnoDto);
+            claseAlumnoDTOList.add(claseAlumnoDTO);
+        }
+
+    return  claseAlumnoDTOList;
+    }
+    //recibimos un json del front con la lista de clasealumno y su estado de presente
+    //por cada clasealumno seteamos el estado de presente y guardamos
+    public void guardarAsistenciaClaseAlumno(List<ClaseAlumnoDTO> claseAlumnoDTOList) {
+        for (ClaseAlumnoDTO claseAlumnoDTO : claseAlumnoDTOList) {
+            ClaseAlumno claseAlumno = claseAlumnoRepository.findById(claseAlumnoDTO.getNroClaseAlumno())
+                    .orElseThrow(() -> new IllegalArgumentException("No existe una clase alumno con el numero " + claseAlumnoDTO.getNroClaseAlumno()));
+            claseAlumno.setPresenteClaseAlumno(claseAlumnoDTO.getPresenteClaseAlumno());
+            claseAlumnoRepository.save(claseAlumno);
+        }
+    }
+
 }

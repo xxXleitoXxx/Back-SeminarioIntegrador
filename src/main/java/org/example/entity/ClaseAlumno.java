@@ -19,12 +19,12 @@ public class ClaseAlumno {
     @jakarta.persistence.Id
     @jakarta.persistence.GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long nroClaseAlumno;
-    private boolean presenteClaseAlumno;
-    @ManyToOne
+        @ManyToOne
     @JoinColumn(name = "clase_id", nullable = false)
     private Clase clase;
     @ManyToOne
     @JoinColumn(name = "alumno_id", nullable = false)
     private Alumno alumno;
+    private Boolean presenteClaseAlumno;
 
 }
