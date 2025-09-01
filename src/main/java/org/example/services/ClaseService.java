@@ -1,5 +1,6 @@
 package org.example.services;
 
+import jakarta.transaction.Transactional;
 import org.example.dto.ClaseDTO;
 import org.example.dto.ProfesorDto;
 import org.example.dto.TipoClaseDTO;
@@ -8,6 +9,7 @@ import org.example.repository.ClaseRepository;
 import org.example.repository.ConfHorarioTipoClaseRepository;
 import org.example.repository.InscripcionProfesorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -31,6 +33,7 @@ public class ClaseService {
     @Autowired
     InscripcionProfesorRepository inscripcionProfesorRepository;
 
+    @Transactional
     public void generarclases() {
         // Buscar configuración activa
         ConfHorarioTipoClase confActual = confHorarioTipoClaseRepository
@@ -185,6 +188,7 @@ public class ClaseService {
         return claseDTOS;
 
     }
+
 
 }
 

@@ -4,6 +4,7 @@ import lombok.*;
 import org.example.entity.Dia;
 
 import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,5 +18,6 @@ public class ClaseDTO {
     private Date fechaHoraClase;
     private DiaDTO diaClase;
     private TipoClaseDTO tipoClase;
+    private List<ProfesorDto> profesores;
 
 }
