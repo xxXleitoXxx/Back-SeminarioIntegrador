@@ -1,5 +1,8 @@
 package org.example.services;
 
+import org.example.dto.ClaseDTO;
+import org.example.dto.DiaDTO;
+import org.example.dto.TipoClaseDTO;
 import org.example.entity.*;
 import org.example.repository.ClaseRepository;
 import org.example.repository.ConfHorarioTipoClaseRepository;
@@ -132,6 +135,24 @@ public class ClaseService {
             profesores.add(inscripcion.getProfesor());
         }
         return profesores;
+    }
+    private List<ClaseDTO> getClases (){
+List<ClaseDTO> claseDTOList =new ArrayList<>();
+        for(Clase clase:claseRepository.findByFechaBajaClaseIsNull()){
+        ClaseDTO claseDTO =new ClaseDTO();
+        claseDTO.setNroClase(clase.getNroClase());
+        claseDTO.setFechaHoraClase(clase.getFechaHoraClase());
+            DiaDTO diaDTO =new DiaDTO();
+            diaDTO.setCodDia(clase.getDiaClase().getCodDia());
+            diaDTO.setNombreDia(clase.getDiaClase().getNombreDia());
+            claseDTO.setDiaClase(diaDTO);
+            TipoClaseDTO tipoClaseDTO =new TipoClaseDTO();
+            tipoClaseDTO.setCodTipoClase(clase.getTipoClase().getCodTipoClase());
+            tipoClaseDTO.setNombreTipoClase(clase.getTipoClase().getNombreTipoClase());
+            claseDTO.setTipoClase(tipoClaseDTO);
+        }
+
+
     }
 
 
