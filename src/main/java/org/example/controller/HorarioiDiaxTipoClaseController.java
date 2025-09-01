@@ -15,10 +15,10 @@ public class HorarioiDiaxTipoClaseController {
     @Autowired
     HorarioiDiaxTipoClaseService horarioiDiaxTipoClaseService;
     @GetMapping("/{confId}")
-    public ResponseEntity<?> getHorariosPorConf (@PathVariable Long confId) {
+    public ResponseEntity<?> getHorariosPorConf () {
         try {
             // Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
-            return ResponseEntity.status(HttpStatus.CREATED).body(horarioiDiaxTipoClaseService.getHorarios(confId));
+            return ResponseEntity.status(HttpStatus.CREATED).body(horarioiDiaxTipoClaseService.getHorarios());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al obtener los horarios: " + e.getMessage());
         }

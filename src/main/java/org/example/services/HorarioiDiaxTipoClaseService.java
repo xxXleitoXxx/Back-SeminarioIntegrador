@@ -1,6 +1,9 @@
 package org.example.services;
 
+import org.example.dto.DiaDTO;
 import org.example.dto.HorarioiDiaxTipoClaseDTO;
+import org.example.dto.RangoEtarioDTO;
+import org.example.dto.TipoClaseDTO;
 import org.example.entity.*;
 import org.example.repository.ConfHorarioTipoClaseRepository;
 import org.example.repository.DiaRepository;
@@ -68,12 +71,48 @@ public class HorarioiDiaxTipoClaseService {
         }
         return "El horario ha sido dado de baja exitosamente.";
     }
-    public List<HorarioiDiaxTipoClase> getHorarios(Long confId) {
+    public List<HorarioiDiaxTipoClaseDTO> getHorarios() {
         // Buscar la configuración por su ID
-        ConfHorarioTipoClase confHorarioTipoClase =confHorarioTipoClaseRepository.findByNroConfTC(confId).orElseThrow(() -> new NoSuchElementException("Conf no encontrada  con confId: " + confId));
+        ConfHorarioTipoClase confHorarioTipoClase =confHorarioTipoClaseRepository.findByFechaFinVigenciaConfIsNull().orElseThrow();
         // Obtener la lista de horarios asociados a la configuración
         List<HorarioiDiaxTipoClase> horarioiDiaxTipoClases = confHorarioTipoClase.getHorarioiDiaxTipoClaseList();
-        return horarioiDiaxTipoClases;
+        // Convertir la lista de entidades a DTOs
+        List<HorarioiDiaxTipoClaseDTO> horarioiDiaxTipoClaseDTOs = new ArrayList<>();
+        for (HorarioiDiaxTipoClase horario : horarioiDiaxTipoClases) {
+            HorarioiDiaxTipoClaseDTO dto = new HorarioiDiaxTipoClaseDTO();
+            dto.setNroHFxTC(horario.getNroHFxTC());
+            dto.setHoraDesde(horario.getHoraDesde());
+            dto.setHoraHasta(horario.getHoraHasta());
+            // Configurar el DTO de Dia
+            Dia dia = horario.getDia();
+            if (dia != null) {
+                DiaDTO diaDTO = new DiaDTO();
+                diaDTO.setCodDia(dia.getCodDia());
+                diaDTO.setNombreDia(dia.getNombreDia());
+                dto.setDiaDTO(diaDTO);
+            }
+            // Configurar el DTO de TipoClase
+            TipoClase tipoClase = horario.getTipoClase();
+               TipoClaseDTO tipoClaseDTO = new org.example.dto.TipoClaseDTO();
+                tipoClaseDTO.setCodTipoClase(tipoClase.getCodTipoClase());
+                tipoClaseDTO.setNombreTipoClase(tipoClase.getNombreTipoClase());
+                tipoClaseDTO.setCupoMaxTipoClase(tipoClase.getCupoMaxTipoClase());
+                tipoClaseDTO.setFechaBajaTipoClase(tipoClase.getFechaBajaTipoClase());
+                RangoEtarioDTO rangoEtarioDTO = new RangoEtarioDTO();
+                RangoEtario rangoEtario = tipoClase.getRangoEtario();
+
+                rangoEtarioDTO.setCodRangoEtario(rangoEtario.getCodRangoEtario());
+                rangoEtarioDTO.setNombreRangoEtario(rangoEtario.getNombreRangoEtario());
+                rangoEtarioDTO.setEdadDesde(rangoEtario.getEdadDesde());
+                rangoEtarioDTO.setEdadHasta(rangoEtario.getEdadHasta());
+                rangoEtarioDTO.setFechaBajaRangoEtario(rangoEtario.getFechaBajaRangoEtario());
+                tipoClaseDTO.setRangoEtarioDTO(rangoEtarioDTO);
+
+                dto.setTipoClase(tipoClaseDTO);
+
+            horarioiDiaxTipoClaseDTOs.add(dto);
+        }
+        return horarioiDiaxTipoClaseDTOs;
     }
 
 

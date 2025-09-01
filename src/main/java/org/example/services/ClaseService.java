@@ -1,7 +1,7 @@
 package org.example.services;
 
 import org.example.dto.ClaseDTO;
-import org.example.dto.DiaDTO;
+import org.example.dto.ProfesorDto;
 import org.example.dto.TipoClaseDTO;
 import org.example.entity.*;
 import org.example.repository.ClaseRepository;
@@ -101,6 +101,7 @@ public class ClaseService {
 
     }
 
+    // Método para obtener la próxima fecha de un día específico de la semana
     private Date proximaFecha(String diaSemana) {
         DayOfWeek diaBuscado = mapearDiaEspanol(diaSemana.toUpperCase(Locale.ROOT));
         LocalDate hoy = LocalDate.now();
@@ -115,6 +116,7 @@ public class ClaseService {
         return Date.from(proxima.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
+    // Mapea días en español a DayOfWeek
     private DayOfWeek mapearDiaEspanol(String diaSemana) {
         return switch (diaSemana) {
             case "LUNES" -> DayOfWeek.MONDAY;
@@ -128,6 +130,7 @@ public class ClaseService {
         };
     }
 
+    //Metodo para traer los profesores de una clase
     private List<Profesor> claseProfesores(TipoClase tipoClase){
         List<InscripcionProfesor> inscripciones = inscripcionProfesorRepository.findByTipoClaseAndFechaBajaInscripcionProfesorIsNull(tipoClase);
         List<Profesor> profesores = new ArrayList<>();
@@ -136,30 +139,52 @@ public class ClaseService {
         }
         return profesores;
     }
-    private List<ClaseDTO> getClases (){
-List<ClaseDTO> claseDTOList =new ArrayList<>();
-        for(Clase clase:claseRepository.findByFechaBajaClaseIsNull()){
-        ClaseDTO claseDTO =new ClaseDTO();
-        claseDTO.setNroClase(clase.getNroClase());
-        claseDTO.setFechaHoraClase(clase.getFechaHoraClase());
-            DiaDTO diaDTO =new DiaDTO();
-            diaDTO.setCodDia(clase.getDiaClase().getCodDia());
-            diaDTO.setNombreDia(clase.getDiaClase().getNombreDia());
-            claseDTO.setDiaClase(diaDTO);
-            TipoClaseDTO tipoClaseDTO =new TipoClaseDTO();
-            tipoClaseDTO.setCodTipoClase(clase.getTipoClase().getCodTipoClase());
-            tipoClaseDTO.setNombreTipoClase(clase.getTipoClase().getNombreTipoClase());
-            claseDTO.setTipoClase(tipoClaseDTO);
+
+    public List<ClaseDTO> getClases() {
+        // Traer la clase de hoy y las futuras
+        List<Clase> clases = claseRepository.findByFechaBajaClaseIsNullAndFechaHoraClaseAfter(new Date());
+        // Verificar que no esté vacío
+        if (clases.isEmpty()) {
+            throw new IllegalArgumentException("No existen clases registradas");
         }
+        // Convertir a DTO
+        List<ClaseDTO> claseDTOS = new ArrayList<>();
+        for (Clase clase : clases) {
+            ClaseDTO claseDTO = new ClaseDTO();
+            claseDTO.setNroClase(clase.getNroClase());
+            claseDTO.setFechaBajaClase(clase.getFechaBajaClase());
+            claseDTO.setFechaHoraClase(clase.getFechaHoraClase());
+            List<ProfesorDto> profesorDTOS = new ArrayList<>();
+            for (Profesor profesor : clase.getProfesores()) {
+                ProfesorDto profesorDTO = new ProfesorDto();
+                profesorDTO.setNroProfesor(profesor.getNroProfesor());
+                profesorDTO.setDniProfesor(profesor.getDniProfesor());
+                profesorDTO.setNombreProfesor(profesor.getNombreProfesor());
+                profesorDTO.setTelefonoProfesor(profesor.getTelefonoProfesor());
+                profesorDTO.setFechaBajaProfesor(profesor.getFechaBajaProfesor());
+                profesorDTO.setEmailProfesor(profesor.getEmailProfesor());
+                profesorDTOS.add(profesorDTO);
+            }
+            claseDTO.setProfesores(profesorDTOS);
+            // TipoClase
+            TipoClase tipoClase = clase.getTipoClase();
+            TipoClaseDTO tipoClaseDT = new TipoClaseDTO();
+            tipoClaseDT.setCodTipoClase(tipoClase.getCodTipoClase());
+            tipoClaseDT.setNombreTipoClase(tipoClase.getNombreTipoClase());
+            tipoClaseDT.setCupoMaxTipoClase(tipoClase.getCupoMaxTipoClase());
+            tipoClaseDT.setFechaBajaTipoClase(tipoClase.getFechaBajaTipoClase());
+            claseDTO.setTipoClase(tipoClaseDT);
+            // Dia
+            Dia dia = clase.getDiaClase();
+            org.example.dto.DiaDTO diaDTO = new org.example.dto.DiaDTO();
+            diaDTO.setCodDia(dia.getCodDia());
+            diaDTO.setNombreDia(dia.getNombreDia());
+            claseDTO.setDiaClase(diaDTO);
+            claseDTOS.add(claseDTO);
+        }
+        return claseDTOS;
 
-return claseDTOList;
     }
-
-
-
-
-
-
 
 }
 
