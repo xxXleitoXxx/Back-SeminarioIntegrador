@@ -152,7 +152,7 @@ List<ClaseDTO> claseDTOList =new ArrayList<>();
             claseDTO.setTipoClase(tipoClaseDTO);
         }
 
-
+return claseDTOList;
     }
 
 
