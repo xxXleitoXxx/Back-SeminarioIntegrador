@@ -89,6 +89,13 @@ public class RangoEtarioService {
         if (rangoEtario.getFechaBajaRangoEtario() != null){
             throw new IllegalStateException("No se puede modificar un rango etario dado de baja");
         }
+        //si el nombre es distinto al actual, verificar que no exista otro con ese nombre
+        if (!rangoEtario.getNombreRangoEtario().equals(rangoEtarioDTO.getNombreRangoEtario())){
+            rangoEtarioRepository.findByNombreRangoEtarioAndFechaBajaRangoEtarioIsNull(rangoEtarioDTO.getNombreRangoEtario())
+                    .ifPresent(rango -> {
+                        throw new IllegalArgumentException("Ya existe un rango etario con ese nombre.");
+                    });
+        }
 
         //verificar que no este relacionado con un tipo de clase
         verificarRelacionConTipoClase(rangoEtario);

@@ -49,7 +49,14 @@ public class DiaService {
             throw new IllegalArgumentException("El dia está dado de baja.");
         }
 
-        //validar que el nuevo nombre no este en uso
+        //si el nombre es distinto al actual, validar que no exista otro dia con ese nombre
+        if (!dia.getNombreDia().equals(nombreDia)){
+            diaRepository.findByNombreDiaAndFechaBajaDiaIsNull(nombreDia)
+                    .ifPresent(d -> {
+                        throw new IllegalArgumentException("Ya existe un dia con ese nombre.");
+                    });
+        }
+
         dia.setNombreDia(nombreDia);
         diaRepository.save(dia);
 

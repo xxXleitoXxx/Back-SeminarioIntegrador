@@ -47,12 +47,13 @@ public class LocalidadService {
         //verificar que exista y no este dado de baja
         Localidad localidadexistente = localidadRepository.findByCodLocalidadAndFechaBajaLocalidadIsNull(codLocalidad)
                 .orElseThrow(() -> new IllegalArgumentException("No se encontró la localidad con el código proporcionado o está dada de baja."));
-        //verificar que el nuevo nombre no este en uso
-        localidadRepository.findByNombreLocalidadAndFechaBajaLocalidadIsNull(localidadDto.getNombreLocalidad())
-                .ifPresent(loc -> {
-                    throw new IllegalArgumentException("Ya existe una localidad con ese nombre.");
-                });
-
+        //si el nombre es distinto al que ya tiene, verificar que no exista otra localidad con ese nombre
+        if (!localidadexistente.getNombreLocalidad().equals(localidadDto.getNombreLocalidad())){
+            localidadRepository.findByNombreLocalidadAndFechaBajaLocalidadIsNull(localidadDto.getNombreLocalidad())
+                    .ifPresent(loc -> {
+                        throw new IllegalArgumentException("Ya existe una localidad con ese nombre.");
+                    });
+        }
         //modificar
         localidadexistente.setNombreLocalidad(localidadDto.getNombreLocalidad());
         localidadRepository.save(localidadexistente);

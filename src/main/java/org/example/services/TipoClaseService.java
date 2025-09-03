@@ -76,13 +76,15 @@ public class TipoClaseService {
         if (tipoClase.getFechaBajaTipoClase() != null){
             throw new IllegalArgumentException("El tipoclase está dado de baja.");
         }
-        //verificar que el nombre no este en uso
-        tipoClaseRepository.findByNombreTipoClaseAndFechaBajaTipoClaseIsNull(tipoClaseDTO.getNombreTipoClase())
-                .ifPresent(tc -> {
-                    if (!tc.getCodTipoClase().equals(codTipoClase)) {
+
+        //si el nombre es distinto al actual, verificar que no este en uso
+        if (!tipoClase.getNombreTipoClase().equals(tipoClaseDTO.getNombreTipoClase())){
+            tipoClaseRepository.findByNombreTipoClaseAndFechaBajaTipoClaseIsNull(tipoClaseDTO.getNombreTipoClase())
+                    .ifPresent(tc -> {
                         throw new IllegalArgumentException("Ya existe un TipoClase con ese nombre.");
-                    }
-                });
+                    });
+        }
+
         //verificar que el cupo maximo sea mayor a 0
         verificarCupoMaximo(tipoClaseDTO);
         //verificar que el cupo maximo no sea menor al cupo actual si es que hay inscripciones
