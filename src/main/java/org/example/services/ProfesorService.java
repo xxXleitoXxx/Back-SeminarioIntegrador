@@ -63,10 +63,13 @@ public class ProfesorService {
         if (profesorexistente.getFechaBajaProfesor() != null) {
             throw new IllegalStateException("No se puede modificar un profesor dado de baja");
         }
-//        //validamos que no exista el profesor en la base de datos por su dni
-//        if (!profesorRepository.findByDniProfesorAndFechaBajaProfesorIsNull(profeactualizado.getDniProfesor()).isEmpty()){
-//            throw new IllegalArgumentException("Ya existe un profesor con ese dni.");
-//        }
+
+        //Si el dni es distinto al que ya tiene, verificar que no exista otro profesor con ese dni
+        if (profesorexistente.getDniProfesor() != (profeactualizado.getDniProfesor())){
+            if (!profesorRepository.findByDniProfesorAndFechaBajaProfesorIsNull(profeactualizado.getDniProfesor()).isEmpty()){
+                throw new IllegalArgumentException("Ya existe un profesor con ese dni.");
+            }
+        }
 
         // Actualizar datos permitidos
         profesorexistente.setTelefonoProfesor(profeactualizado.getTelefonoProfesor());

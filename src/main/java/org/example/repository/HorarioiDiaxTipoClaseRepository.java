@@ -1,6 +1,5 @@
 package org.example.repository;
 
-import org.example.dto.DiaDTO;
 import org.example.entity.Dia;
 import org.example.entity.HorarioiDiaxTipoClase;
 import org.example.entity.TipoClase;
@@ -19,6 +18,7 @@ public interface HorarioiDiaxTipoClaseRepository extends JpaRepository<HorarioiD
 
     Optional<HorarioiDiaxTipoClase> findByNroHFxTC(Long nroHFxTC);
     List<HorarioiDiaxTipoClase>  findByTipoClaseAndFechaBajaHFxTCIsNull(TipoClase tipoClase);
+    boolean existsByDiaAndFechaBajaHFxTCIsNull(Dia dia);
 }
 
 

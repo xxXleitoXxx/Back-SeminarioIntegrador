@@ -3,7 +3,9 @@ package org.example.services;
 
 import org.example.dto.DiaDTO;
 import org.example.entity.Dia;
+import org.example.repository.ClaseRepository;
 import org.example.repository.DiaRepository;
+import org.example.repository.HorarioiDiaxTipoClaseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,10 @@ import java.util.List;
 public class DiaService {
     @Autowired
     DiaRepository  diaRepository;
+    @Autowired
+    HorarioiDiaxTipoClaseRepository horarioiDiaxTipoClaseRepository;
+    @Autowired
+    ClaseRepository claseRepository;
 
     public DiaDTO crearDia(DiaDTO diaDTO){
         //validar que no exista un dia con ese nombre y que no este dado de baja
@@ -57,6 +63,11 @@ public class DiaService {
                     });
         }
 
+        //verificar que no esta relacionado a ningun horario
+        if (horarioiDiaxTipoClaseRepository.existsByDiaAndFechaBajaHFxTCIsNull(dia)) {
+            throw new IllegalArgumentException("No se puede modificar el día porque está asociado a un horario.");
+        }
+
         dia.setNombreDia(nombreDia);
         diaRepository.save(dia);
 
@@ -76,6 +87,11 @@ public class DiaService {
         //validar que no este dado de baja
         if (dia.getFechaBajaDia() != null){
             throw new IllegalArgumentException("El dia ya está dado de baja.");
+        }
+
+        //verificar que no esta relacionado a ningun horario
+        if (horarioiDiaxTipoClaseRepository.existsByDiaAndFechaBajaHFxTCIsNull(dia)) {
+            throw new IllegalArgumentException("No se puede modificar el día porque está asociado a un horario.");
         }
 
         //dar de baja
