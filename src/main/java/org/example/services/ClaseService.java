@@ -12,9 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.sql.Time;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
@@ -58,12 +57,26 @@ public class ClaseService {
             }
 
             for (HorarioiDiaxTipoClase horarios : confActual.getHorarioiDiaxTipoClaseList()) {
-
+                //fechaClase tiene que sumarle la hora del horario desde a la fecha
                 Date fechaClase = proximaFecha(horarios.getDia().getNombreDia());
+                Time horaClase = horarios.getHoraDesde();
+                // Convertir Date a LocalDate
+                LocalDate fecha = fechaClase.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+
+                // Convertir Time a LocalTime
+                LocalTime hora = horaClase.toLocalTime();
+
+                // Combinar en LocalDateTime
+                LocalDateTime fechaHoraClase = LocalDateTime.of(fecha, hora);
+
+                // Si necesitás volver a Date
+                Date fechaFinal = Date.from(fechaHoraClase.atZone(ZoneId.systemDefault()).toInstant());
 
                 Clase clase = new Clase();
                 clase.setDiaClase(horarios.getDia());
-                clase.setFechaHoraClase(fechaClase);
+                clase.setFechaHoraClase(fechaFinal);
                 clase.setTipoClase(horarios.getTipoClase());
                 List<Profesor> profesores = new ArrayList<>(claseProfesores(horarios.getTipoClase()));
                 clase.setProfesores(profesores);
@@ -87,11 +100,26 @@ public class ClaseService {
             if (clasesHoy.isEmpty() || clasesMañana.isEmpty()) {
                 for (HorarioiDiaxTipoClase horarios : confActual.getHorarioiDiaxTipoClaseList()) {
 
+                    //fechaClase tiene que sumarle la hora del horario desde a la fecha
                     Date fechaClase = proximaFecha(horarios.getDia().getNombreDia());
+                    Time horaClase = horarios.getHoraDesde();
+                    // Convertir Date a LocalDate
+                    LocalDate fecha = fechaClase.toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate();
+
+                    // Convertir Time a LocalTime
+                    LocalTime hora = horaClase.toLocalTime();
+
+                    // Combinar en LocalDateTime
+                    LocalDateTime fechaHoraClase = LocalDateTime.of(fecha, hora);
+
+                    // Si necesitás volver a Date
+                    Date fechaFinal = Date.from(fechaHoraClase.atZone(ZoneId.systemDefault()).toInstant());
 
                     Clase clase = new Clase();
                     clase.setDiaClase(horarios.getDia());
-                    clase.setFechaHoraClase(fechaClase);
+                    clase.setFechaHoraClase(fechaFinal);
                     clase.setTipoClase(horarios.getTipoClase());
                     List<Profesor> profesores = new ArrayList<>(claseProfesores(horarios.getTipoClase()));
                     clase.setProfesores(profesores);
@@ -144,8 +172,12 @@ public class ClaseService {
     }
 
     public List<ClaseDTO> getClases() {
+        //fecha actual menos 7 dias para traer las clases de la semana
+        Date fechaHaceUnaSemana = new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000);
+
+
         // Traer la clase de hoy y las futuras
-        List<Clase> clases = claseRepository.findByFechaBajaClaseIsNullAndFechaHoraClaseAfter(new Date());
+        List<Clase> clases = claseRepository.findByFechaBajaClaseIsNullAndFechaHoraClaseAfter(fechaHaceUnaSemana);
         // Verificar que no esté vacío
         if (clases.isEmpty()) {
             throw new IllegalArgumentException("No existen clases registradas");

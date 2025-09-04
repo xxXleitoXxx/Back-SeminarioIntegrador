@@ -23,7 +23,7 @@ public class ClaseController {
 
 
     @GetMapping
-    public ResponseEntity<?> getDias() {
+    public ResponseEntity<?> getClases() {
         try {
             // Esto deberia manejarse en el servicio, pero por simplicidad lo hacemos aqui
             List<ClaseDTO> claseDTOS = c.getClases();

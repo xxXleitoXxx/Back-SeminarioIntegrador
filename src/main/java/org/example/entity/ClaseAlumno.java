@@ -25,6 +25,6 @@ public class ClaseAlumno {
     @ManyToOne
     @JoinColumn(name = "alumno_id", nullable = false)
     private Alumno alumno;
-    private Boolean presenteClaseAlumno;
+    private Boolean presenteClaseAlumno = false;
 
 }
