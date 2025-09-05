@@ -27,8 +27,6 @@ public class ConfHorarioTipoClase {
     @JoinColumn(name = "conf_id") // columna creada en la tabla HorarioiDiaxTipoClase
     private List<HorarioiDiaxTipoClase> horarioiDiaxTipoClaseList = new ArrayList<>();
 
-// HorarioiDiaxTipoClase
-// no necesita referencia al padre
 
 }
 

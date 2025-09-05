@@ -44,7 +44,7 @@ public class ConfHorarioTipoClaseService {
 
         // Crear nueva config
         ConfHorarioTipoClase nuevaConf = new ConfHorarioTipoClase();
-        nuevaConf.setFechaVigenciaConf(confHorarioTipoClaseDTO.getFechaVigenciaConf());
+        nuevaConf.setFechaVigenciaConf(new Date());
         nuevaConf.setFechaFinVigenciaConf(null);
 
         // Validar y crear horarios en memoria
