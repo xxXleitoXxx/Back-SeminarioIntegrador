@@ -25,14 +25,12 @@ public class ClaseAlumnoController {
         }
     }
     @PostMapping("asistencia")
-    public ResponseEntity<?> guardarAsistenciaClaseAlumno(List<ClaseAlumnoDTO> claseAlumnoDTOS) {
+    public ResponseEntity<?> guardarAsistenciaClaseAlumno(@RequestBody List<ClaseAlumnoDTO> claseAlumnoDTOS) {
         try {
             claseAlumnoService.guardarAsistenciaClaseAlumno(claseAlumnoDTOS);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Se generaron las clases alumno correctamente");
+            return ResponseEntity.status(HttpStatus.CREATED).body("Se registraron las asistencias correctamente");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al generar las clases alumno: " + e.getMessage());
         }
     }
-
-
 }
