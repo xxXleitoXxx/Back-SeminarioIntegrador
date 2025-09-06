@@ -17,7 +17,7 @@ public class ClaseAlumnoController {
     @Autowired
     ClaseAlumnoService claseAlumnoService;
     @GetMapping("asistencia/{nroClase}")
-    public ResponseEntity<?> getDias(@PathVariable Long nroClase) {
+    public ResponseEntity<?> getAsistenciaClaseAlumno(@PathVariable Long nroClase) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(claseAlumnoService.getAsistenciaClaseAlumno(nroClase));
         } catch (Exception e) {

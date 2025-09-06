@@ -52,14 +52,14 @@ public class ClaseAlumnoService {
     }
     public List<ClaseAlumnoDTO> getAsistenciaClaseAlumno(Long nroClase){
         Optional<Clase> clase = claseRepository.findById(nroClase);
-        AlumnoDto alumnoDto=new AlumnoDto();
+
         List<ClaseAlumnoDTO> claseAlumnoDTOList=new ArrayList<>();
 
         for(ClaseAlumno claseAlumno : claseAlumnoRepository.findByClase(clase)){
             ClaseAlumnoDTO claseAlumnoDTO=new ClaseAlumnoDTO();
             claseAlumnoDTO.setNroClaseAlumno(claseAlumno.getNroClaseAlumno());
             claseAlumnoDTO.setPresenteClaseAlumno(claseAlumno.getPresenteClaseAlumno());
-
+            AlumnoDto alumnoDto=new AlumnoDto();
             alumnoDto.setNroAlumno(claseAlumno.getAlumno().getNroAlumno());
             alumnoDto.setNombreAlumno(claseAlumno.getAlumno().getNombreAlumno());
             alumnoDto.setApellidoAlumno(claseAlumno.getAlumno().getApellidoAlumno());
