@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,8 +40,9 @@ public class ClaseAlumnoService {
 
     }
     public void generarUnClaseAlumno(TipoClase tipoClase, Alumno alumno){
-            //busco las clases activas del tipo de clase
-            List<Clase> clases = claseRepository.findByTipoClaseAndFechaBajaClaseIsNull(tipoClase);
+            //busco las clases activas del tipo de clase y que la fecha de la clase sea mayor o igual a la fecha de inscripcion
+            List<Clase> clases = claseRepository.findByTipoClaseAndFechaBajaClaseIsNullAndFechaHoraClaseGreaterThanEqual(tipoClase, new Date());
+            //por
             //crear una clase alumno por cada clase activa
             for (Clase clase : clases) {
                 ClaseAlumno claseAlumno = new ClaseAlumno();

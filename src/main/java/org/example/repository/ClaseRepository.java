@@ -15,6 +15,6 @@ public interface ClaseRepository extends JpaRepository<Clase,Long> {
     List<Clase> findByFechaBajaClaseIsNullAndFechaHoraClase(Date fecha);
     Optional <Clase> findByNroClaseAndFechaBajaClaseIsNull(Long nroClase);
     List<Clase> findByFechaBajaClaseIsNullAndFechaHoraClaseAfter(Date fechaHoy);
-    List<Clase> findByTipoClaseAndFechaBajaClaseIsNull(TipoClase tipoClase);
+    List<Clase> findByTipoClaseAndFechaBajaClaseIsNullAndFechaHoraClaseGreaterThanEqual(TipoClase tipoClase, Date fecha);
     List<Clase> findByFechaBajaClaseIsNull();
 }
