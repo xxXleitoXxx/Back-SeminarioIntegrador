@@ -108,7 +108,7 @@ public class InscripcionService {
 
         // Traer inscripciones activas para este tipo de clase
         List<Inscripcion> inscripcionesActivas =
-                inscripcionRepository.findByTipoClase(tipoClase);
+                inscripcionRepository.findByTipoClaseAndFechaBajaInscripcionIsNull(tipoClase);
 
         // Contar las inscripciones
         for (Inscripcion inscripcion : inscripcionesActivas) {

@@ -21,7 +21,7 @@ public class InscripcionProfesorService {
     TipoClaseRepository tipoClaseRepository;
 
     public InscripcionProfesorDTO inscribirProfesor(int dniProfesor, Long codTipoClase) {
-        // Buscar alumno y validar que no esté dado de baja
+        // Buscar profesor y validar que no esté dado de baja
         Profesor profesor = profesorRepository.findByDniProfesorAndFechaBajaProfesorIsNull(dniProfesor)
                 .orElseThrow(() -> new IllegalArgumentException("Profesor no encontrado o dado de baja"));
 
@@ -69,7 +69,7 @@ public class InscripcionProfesorService {
         return inscripcionProfesorDTO;
     }
 
-    private void existeInscripcionProfesor(Profesor profesor, TipoClase tipoClase) {
+    private void  existeInscripcionProfesor(Profesor profesor, TipoClase tipoClase) {
         inscripcionProfesorRepository.findByProfesorAndTipoClaseAndFechaBajaInscripcionProfesorIsNull(profesor, tipoClase)
                 .ifPresent(inscripcion -> {
                     throw new IllegalArgumentException("El profesor ya está inscripto en esa clase.");
