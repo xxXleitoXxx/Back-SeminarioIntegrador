@@ -42,6 +42,8 @@ public class SecurityConfig {
                         // 👇 Siempre con "/" inicial
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/horario/**").hasRole("RECEPCIONISTA")
+                        .requestMatchers("/api/v1/fichaMedica/alumno/").hasRole("RECEPCIONISTA")
+                        .requestMatchers("/api/v1/fichaMedica/alumno/**").hasRole("RECEPCIONISTA")
                         .requestMatchers("/api/v1/tipoclases**").hasRole("RECEPCIONISTA")
                         .requestMatchers("/api/v1/alumnos").hasRole("RECEPCIONISTA")
                         .requestMatchers("/api/v1/claseAlumno/asistencia/**").hasRole("RECEPCIONISTA")
