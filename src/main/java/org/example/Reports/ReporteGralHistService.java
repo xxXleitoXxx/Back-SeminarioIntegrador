@@ -52,7 +52,9 @@ public class ReporteGralHistService {
             for(Clase claseXtipoClase : claseRepository.findByTipoClaseAndFechaBajaClaseIsNull(tipoClase)){
                 //buscamos las instancias de claseAlumno relacionada a la clase
                 for(ClaseAlumno claseAlumno: claseAlumnoRepository.findByClase(claseXtipoClase) ){
-                    if(claseAlumno.getPresenteClaseAlumno()) {
+                    boolean presente = claseAlumno.getPresenteClaseAlumno();
+                    //si el alumno estuvo presente sumamos 1 a presenteTotalClases sino a aus
+                    if(presente) {
                         tipoClaseDTO.setPresenteTotalClases(tipoClaseDTO.getPresenteTotalClases() + 1);
                     }
                     else{
@@ -74,9 +76,12 @@ public class ReporteGralHistService {
                         tipoClaseDTO.setInscriptos(tipoClaseDTO.getInscriptos()+1);
 
                 }
-                reporteGralHistDTO.setAlumnoTotalesInscriptos(reporteGral().getAlumnoTotalesInscriptos()+tipoClaseDTO.getInscriptos());
+
+
+                reporteGralHistDTO.setAlumnoTotalesInscriptos(tipoClaseDTO.getInscriptos());
+                 int alumnosTotalesInscriptos =tipoClaseDTO.getInscriptos();
                 List<Inscripcion> incripcionestotales= inscripcionRepository.findAll();
-                reporteGralHistDTO.setAlumnoTotalesNoInscriptos(reporteGral().getAlumnoTotalesInscriptos()-incripcionestotales.size());
+                reporteGralHistDTO.setAlumnoTotalesNoInscriptos(alumnosTotalesInscriptos-incripcionestotales.size());
 
             }
 tiposClasesDto.add(tipoClaseDTO);
