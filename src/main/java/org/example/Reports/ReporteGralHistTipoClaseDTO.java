@@ -11,7 +11,6 @@ import lombok.*;
 public class ReporteGralHistTipoClaseDTO {
     private int inscriptos;
     private String nombreTipoClase;
-    private int cantidadInscriptos;
     private int presenteTotalClases;
     private int ausenteTotalClases;
     private double porcentajeAsistencia;

@@ -42,60 +42,54 @@ public class ReporteGralHistService {
             localidadesDto.add(localidadDTO);
         }
 
+
         List<ReporteGralHistTipoClaseDTO> tiposClasesDto = new ArrayList<>();
+        int totalInscriptos = 0;
+        int totalNoInscriptos = 0;
         //crear ReporteGralHistTipoClaseDTO y asignarle los alumnos inscriptos
         for(TipoClase tipoClase : tipoClaseRepository.findByFechaBajaTipoClaseIsNull()){
             ReporteGralHistTipoClaseDTO tipoClaseDTO = new ReporteGralHistTipoClaseDTO();
             tipoClaseDTO.setAusenteTotalClases(0);
+            tipoClaseDTO.setPresenteTotalClases(0);
             tipoClaseDTO.setNombreTipoClase(tipoClase.getNombreTipoClase());
-            //buscamos las clases para despues buscar la asistencia
+            // Acumular presentes y ausentes de todas las clases de este tipo
             for(Clase claseXtipoClase : claseRepository.findByTipoClaseAndFechaBajaClaseIsNull(tipoClase)){
-                //buscamos las instancias de claseAlumno relacionada a la clase
                 for(ClaseAlumno claseAlumno: claseAlumnoRepository.findByClase(claseXtipoClase) ){
-                    boolean presente = claseAlumno.getPresenteClaseAlumno();
-                    //si el alumno estuvo presente sumamos 1 a presenteTotalClases sino a aus
-                    if(presente) {
+                    Boolean presente = claseAlumno.getPresenteClaseAlumno();
+                    if(Boolean.TRUE.equals(presente)) {
                         tipoClaseDTO.setPresenteTotalClases(tipoClaseDTO.getPresenteTotalClases() + 1);
-                    }
-                    else{
+                    } else {
                         tipoClaseDTO.setAusenteTotalClases(tipoClaseDTO.getAusenteTotalClases() + 1);
                     }
                 }
-                int presente = tipoClaseDTO.getPresenteTotalClases();
-                int ausente = tipoClaseDTO.getAusenteTotalClases();
-                int total = presente + ausente;
-                if(total>0){
-                    tipoClaseDTO.setPorcentajeAsistencia((double) (presente * 100) /total);
-                } else{
-                    tipoClaseDTO.setPorcentajeAsistencia(0);
-                }
-
-                //buscamos los inscriptos a las clases
-                for(Inscripcion inscripcion : inscripcionRepository.findByTipoClase(tipoClase)){
-
-                        tipoClaseDTO.setInscriptos(tipoClaseDTO.getInscriptos()+1);
-
-                }
-
-
-                reporteGralHistDTO.setAlumnoTotalesInscriptos(tipoClaseDTO.getInscriptos());
-                 int alumnosTotalesInscriptos =tipoClaseDTO.getInscriptos();
-                List<Inscripcion> incripcionestotales= inscripcionRepository.findAll();
-                reporteGralHistDTO.setAlumnoTotalesNoInscriptos(alumnosTotalesInscriptos-incripcionestotales.size());
-
             }
-tiposClasesDto.add(tipoClaseDTO);
+            int presente = tipoClaseDTO.getPresenteTotalClases();
+            int ausente = tipoClaseDTO.getAusenteTotalClases();
+            int total = presente + ausente;
+            if(total > 0){
+                tipoClaseDTO.setPorcentajeAsistencia((double) (presente * 100) / total);
+            } else {
+                tipoClaseDTO.setPorcentajeAsistencia(0);
+            }
+            // Calcular inscriptos solo una vez por tipo de clase
+            int inscriptos = inscripcionRepository.findByTipoClaseAndFechaBajaInscripcionIsNull(tipoClase).size();
+            tipoClaseDTO.setInscriptos(inscriptos);
+            // Acumular para totales generales
+            totalInscriptos += inscriptos;
+            tiposClasesDto.add(tipoClaseDTO);
         }
-        reporteGralHistDTO.setAlumnoTotalesActivos(alumnoRepository.findAll().size());
-        reporteGralHistDTO.setAlumnoTotalesInactivos(alumnoRepository.findByFechaBajaAlumnoIsNull().size());
+        // Calcular totales generales correctamente
+        int totalInscripciones = inscripcionRepository.findAll().size();
+        totalNoInscriptos = totalInscriptos - totalInscripciones;
+        reporteGralHistDTO.setAlumnoTotalesInscriptos(totalInscriptos);
+        reporteGralHistDTO.setAlumnoTotalesNoInscriptos(totalNoInscriptos);
+        reporteGralHistDTO.setAlumnoTotalesActivos(alumnoRepository.findByFechaBajaAlumnoIsNull().size());
+        reporteGralHistDTO.setAlumnoTotalesInactivos(alumnoRepository.findAll().size() - alumnoRepository.findByFechaBajaAlumnoIsNull().size());
         reporteGralHistDTO.setReporteXLocalidad(localidadesDto);
         reporteGralHistDTO.setReporteXTipoClase(tiposClasesDto);
-
-
-        return new ReporteGralHistDTO();
+        return reporteGralHistDTO;
 
 
     }
 
 }
-
