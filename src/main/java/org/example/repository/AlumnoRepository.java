@@ -12,6 +12,6 @@ import java.util.Optional;
 @Repository
 public interface AlumnoRepository extends JpaRepository<Alumno,Long> {
 
-    Optional<Alumno> findByDniAlumno(int dniAlumno);
+    Optional<Alumno> findByDniAlumnoAndFechaBajaAlumnoIsNull(int dniAlumno);
     List<Alumno> findByLocalidadAlumnoAndFechaBajaAlumnoIsNull(Localidad localidadAlumno);
 }

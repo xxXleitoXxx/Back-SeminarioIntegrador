@@ -92,6 +92,11 @@ public class AlumnoService {
             alumno.setTelefonoAlumno(alumnoDto.getTelefonoAlumno());
             alumno.setDomicilioAlumno(alumnoDto.getDomicilioAlumno());
 
+            //Si el dni es distinto al que ya tiene, verificar que no exista otro profesor con ese dni
+            if (alumno.getDniAlumno() != (alumnoDto.getDniAlumno())) {
+                existeAlumnoPorDni(alumnoDto.getDniAlumno());
+            }
+
             // Actualizamos la localidad del Alumno
             Localidad localidad = localidadRepository.findByCodLocalidadAndFechaBajaLocalidadIsNull(alumnoDto.getLocalidadAlumno().getCodLocalidad()).orElseThrow();
             alumno.setLocalidadAlumno(localidad);
@@ -139,7 +144,7 @@ public class AlumnoService {
 
     //Metodo para validar si un alumno existe por su DNI
     public void existeAlumnoPorDni(int dniAlumno) {
-        if (alumnoRepository.findByDniAlumno(dniAlumno).isPresent()) {
+        if (alumnoRepository.findByDniAlumnoAndFechaBajaAlumnoIsNull(dniAlumno).isPresent()) {
             ;
             throw new IllegalArgumentException("Ya existe un alumno con el DNI proporcionado");
         }
@@ -148,7 +153,7 @@ public class AlumnoService {
     //comprueba si el alumno tiene inscripciones activas en clases
     public void tieneInscripcionesActivasPorDni(int dniAlumno) {
 
-        Alumno alumno = alumnoRepository.findByDniAlumno(dniAlumno)
+        Alumno alumno = alumnoRepository.findByDniAlumnoAndFechaBajaAlumnoIsNull(dniAlumno)
                 .orElseThrow(() -> new NoSuchElementException("Alumno no encontrado con DNI: " + dniAlumno));
         inscripcionService.existenInscripciones(alumno);
     }
@@ -221,7 +226,7 @@ public class AlumnoService {
     }
 
     public Alumno bajaAlumno(int dniAlumno) {
-        Alumno alumno = alumnoRepository.findByDniAlumno(dniAlumno)
+        Alumno alumno = alumnoRepository.findByDniAlumnoAndFechaBajaAlumnoIsNull(dniAlumno)
                 .orElseThrow(() -> new NoSuchElementException("Alumno no encontrado con DNI: " + dniAlumno));
         // Verificamos si el alumno ya tiene una fecha de baja
         if (alumno.getFechaBajaAlumno() != null) {

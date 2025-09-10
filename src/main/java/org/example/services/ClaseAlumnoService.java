@@ -49,7 +49,6 @@ public class ClaseAlumnoService {
                 claseAlumno.setClase(clase);
                 claseAlumno.setAlumno(alumno);
                 claseAlumnoRepository.save(claseAlumno);
-
             }
     }
     public List<ClaseAlumnoDTO> getAsistenciaClaseAlumno(Long nroClase){

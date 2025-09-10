@@ -24,7 +24,7 @@ public class InscripcionService {
     ClaseAlumnoService claseAlumnoService;
     public InscripcionDTO inscribirAlumno(int dniAlumno, Long codTipoClase) {
         // Buscar alumno y validar que no esté dado de baja
-        Alumno alumno = alumnoRepository.findByDniAlumno(dniAlumno)
+        Alumno alumno = alumnoRepository.findByDniAlumnoAndFechaBajaAlumnoIsNull(dniAlumno)
                 .orElseThrow(() -> new IllegalArgumentException("Alumno no encontrado"));
         if (alumno.getFechaBajaAlumno() != null) {
             throw new IllegalArgumentException("Alumno dado de baja");
