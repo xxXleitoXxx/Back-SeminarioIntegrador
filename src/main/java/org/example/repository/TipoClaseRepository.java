@@ -14,4 +14,5 @@ public interface TipoClaseRepository extends JpaRepository<TipoClase,Long> {
     Optional<TipoClase> findBycodTipoClase(Long codTipoClase);
     List<TipoClase> findByRangoEtarioAndFechaBajaTipoClaseIsNull(RangoEtario rangoEtario);
     Optional<TipoClase> findByNombreTipoClaseAndFechaBajaTipoClaseIsNull(String nombreTipoClase);
+    List<TipoClase> findByFechaBajaTipoClaseIsNull();
 }

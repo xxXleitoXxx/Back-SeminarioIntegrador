@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface ClaseAlumnoRepository extends JpaRepository<ClaseAlumno,Long> {
-    List<ClaseAlumno> findByClase(Optional<Clase> clase);
+    List<ClaseAlumno> findByClase(Clase clase);
 }

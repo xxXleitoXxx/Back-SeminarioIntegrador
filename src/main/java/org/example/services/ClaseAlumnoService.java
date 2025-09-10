@@ -56,7 +56,7 @@ public class ClaseAlumnoService {
 
         List<ClaseAlumnoDTO> claseAlumnoDTOList=new ArrayList<>();
 
-        for(ClaseAlumno claseAlumno : claseAlumnoRepository.findByClase(clase)){
+        for(ClaseAlumno claseAlumno : claseAlumnoRepository.findByClase(clase.get())){
             ClaseAlumnoDTO claseAlumnoDTO=new ClaseAlumnoDTO();
             claseAlumnoDTO.setNroClaseAlumno(claseAlumno.getNroClaseAlumno());
             claseAlumnoDTO.setPresenteClaseAlumno(claseAlumno.getPresenteClaseAlumno());

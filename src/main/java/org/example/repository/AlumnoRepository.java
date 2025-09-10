@@ -14,4 +14,7 @@ public interface AlumnoRepository extends JpaRepository<Alumno,Long> {
 
     Optional<Alumno> findByDniAlumnoAndFechaBajaAlumnoIsNull(int dniAlumno);
     List<Alumno> findByLocalidadAlumnoAndFechaBajaAlumnoIsNull(Localidad localidadAlumno);
+
+
+    List<Alumno> findByFechaBajaAlumnoIsNull();
 }
